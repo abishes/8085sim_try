@@ -129,3 +129,24 @@ void LDAX_STAX(string& line, registers& R, int lineNumber){
 		cout<<"Invalid register pair(B/D) in line: "<<lineNumber<<endl;
 	}
 }
+
+void LHLD(string& line, registers& R, int lineNumber){
+	string address;
+	if (line[9] != 'H')
+	{
+		cout << "Data must end with H in line :"<<lineNumber<<endl;
+		return;
+	}
+	for(int i =0; line[i+5] !='H';i++){
+		if(!checkData(line[i+5])){
+			cout<<"Invalid data in line:" << lineNumber <<endl;
+			return;
+		}
+		address.push_back(line[i+5]);
+	}
+	R.registerSet('L', readMemory(addressStringToInt(address)));
+	if((addressStringToInt(address) + 1) > 65535){
+		cout << "Exceed memory FFFF\n";
+	}
+	R.registerSet('H', readMemory(addressStringToInt(address) + 1));
+}

@@ -7,5 +7,6 @@
 void MVI(string&, registers&, int);
 void MOV(string&, registers&, int);
 void LDA(string&, registers&, int);
+void LXI(string&, registers&, int);
 
 #endif

@@ -64,9 +64,42 @@ void LDA(string &line, registers &R, int lineNumber){
 		}
 		address.push_back(line[i+4]);
 	}
+	R.registerSet('A', readMemory(addressStringToInt(address)));
+	//OR
 	// int addressInt = addressStringToInt(address);
 	// string data = readMemory(addressStringToInt(address));
 	// R.registerSet('A', data);
-	// OR in 1 line
-	R.registerSet('A', readMemory(addressStringToInt(address)));
+}
+
+void LXI(string& line, registers& R, int lineNumber){
+	string Haddress;	//higher order address
+	string Laddress;	//lower order address
+	if(line[5] != ' '){
+		cout<<"No space in line: "<< lineNumber << endl;
+	}
+	if(line[4] == 'B' || line[4] == 'D' || line[4] == 'H'){
+		if(line[10] != 'H'){
+			cout << "Data must be of 4-byte and end with H in line: "<< lineNumber<< endl;
+		}
+		for(int i =0; line[i+8] !='H';i++){
+			if(!checkData(line[i+6]) || !checkData(line[i+8])){
+				cout<<"Invalid data in line:" << lineNumber <<endl;
+				return;
+			}
+			Haddress.push_back(line[i+6]);
+			Laddress.push_back(line[i+8]);
+		}
+		if(line[4] == 'H'){ //for HL
+			R.registerSet('H', Haddress);
+			R.registerSet('L', Laddress);
+		}
+		else{	//for BC and DE pair
+			R.registerSet(line[4], Haddress);
+			R.registerSet(char (line[4] + 1), Laddress);
+		}
+	}
+	else{
+		cout<<"No such register pair in line: " << lineNumber << endl;
+		return;
+	}
 }

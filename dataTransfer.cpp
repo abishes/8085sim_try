@@ -173,3 +173,12 @@ void SHLD(string& line, registers& R, int lineNumber){
 	}
 	writeMemory((addressStringToInt(address) + 1),dataStringToInt(R.registerName('H')));
 }
+
+void XCHG(registers& R){
+	string temp = R.registerName('H');
+	R.registerSet('H', R.registerName('D'));
+	R.registerSet('D', temp);
+	temp = R.registerName('L');
+	R.registerSet('L', R.registerName('E'));
+	R.registerSet('E', temp);
+}

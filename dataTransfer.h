@@ -11,5 +11,6 @@ void LXI(string&, registers&, int);
 void LDAX_STAX(string&, registers&, int);
 void LHLD(string&, registers&, int);
 void SHLD(string&, registers&, int);
+void XCHG(registers&);
 
 #endif

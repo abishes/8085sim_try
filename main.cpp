@@ -43,6 +43,8 @@ int instructionDecode(string &line, registers &R, mappingLabel& M, int lineNumbe
 		LDAX_STAX(line, R, lineNumber);
 	else if(instruction == "LHLD")
 		LHLD(line, R, lineNumber);
+	else if(instruction == "SHLD")
+		SHLD(line, R, lineNumber);
 	/*Branching instruction*/
 	else if(instruction == "JC" || instruction == "JP" ||  instruction == "JM" || instruction == "JZ")
 		return JC_JP_JM_JZ(line, R, M, instruction, lineNumber);	//branching instruction have return because they represents

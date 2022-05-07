@@ -147,6 +147,29 @@ void LHLD(string& line, registers& R, int lineNumber){
 	R.registerSet('L', readMemory(addressStringToInt(address)));
 	if((addressStringToInt(address) + 1) > 65535){
 		cout << "Exceed memory FFFF\n";
+		return;
 	}
 	R.registerSet('H', readMemory(addressStringToInt(address) + 1));
+}
+
+void SHLD(string& line, registers& R, int lineNumber){
+	string address;
+	if (line[9] != 'H')
+	{
+		cout << "Data must end with H in line :"<<lineNumber<<endl;
+		return;
+	}
+	for(int i =0; line[i+5] !='H';i++){
+		if(!checkData(line[i+5])){
+			cout<<"Invalid data in line:" << lineNumber <<endl;
+			return;
+		}
+		address.push_back(line[i+5]);
+	}
+	writeMemory(addressStringToInt(address), dataStringToInt(R.registerName('L')));
+	if(addressStringToInt(address) > 65535){
+		cout << "Exceed memory FFFF\n";
+		return;
+	}
+	writeMemory((addressStringToInt(address) + 1),dataStringToInt(R.registerName('H')));
 }

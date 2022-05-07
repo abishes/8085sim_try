@@ -103,3 +103,18 @@ void LXI(string& line, registers& R, int lineNumber){
 		return;
 	}
 }
+
+void LDAX(string& line, registers& R, int lineNumber){
+	if(line[5] == 'B' || line[5] == 'D'){
+		string lineToLDA = "LDA ";
+		string Haddress = R.registerName(line[5]);
+		string Laddress = R.registerName(char(line[5] + 1));
+		lineToLDA = lineToLDA + Haddress + Laddress;
+		lineToLDA += 'H';
+		cout<<lineToLDA<<endl;
+		LDA(lineToLDA, R, lineNumber);
+	}
+	else{
+		cout<<"Invalid register pair(B/D) in line: "<<lineNumber<<endl;
+	}
+}

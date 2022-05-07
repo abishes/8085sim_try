@@ -13,21 +13,20 @@ void MVI(string &line, registers &R, int lineNumber)
 		cout << "Space required between Register and data in line :"<<lineNumber<<endl;
 		return;
 	}
-	char data[3];
-	data[0] = line[6];  //higher order data
-	data[1] = line[7];  //lower order data
-	data[2] = '\0';
-	if (!(checkData(data[0]) && checkData(data[1])))
+	if (!(checkData(line[6]) && checkData(line[7])))
 	{
 		cout << "invalid data in line :"<<lineNumber<<endl;
 		return;
 	}
+	string dataString;
+	dataString.push_back(line[6]);
+	dataString.push_back(line[7]);
+	
 	if (line[8] != 'H')
 	{
 		cout << "Data must end with H to indicate hexa in line :"<<lineNumber<<endl;
 		return;
 	}
-	string dataString=data; // full data in string
 	R.registerSet(registerNname, dataString);
 	return;
 }

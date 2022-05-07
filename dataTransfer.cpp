@@ -49,3 +49,24 @@ void MOV(string &line, registers &R, int lineNumber)
 	R.registerSet(register1, register2);
 	return;
 }
+
+void LDA(string &line, registers &R, int lineNumber){
+	string address;
+	if (line[8] != 'H')
+	{
+		cout << "Data must end with H to indicate hexa in line :"<<lineNumber<<endl;
+		return;
+	}
+	for(int i =0; line[i+4] !='H';i++){
+		if(!checkData(line[i+4])){
+			cout<<"Invalid data in line:" << lineNumber <<endl;
+			return;
+		}
+		address.push_back(line[i+4]);
+	}
+	// int addressInt = addressStringToInt(address);
+	// string data = readMemory(addressStringToInt(address));
+	// R.registerSet('A', data);
+	// OR in 1 line
+	R.registerSet('A', readMemory(addressStringToInt(address)));
+}

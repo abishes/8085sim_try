@@ -37,6 +37,9 @@ string dataIntToString(int dataInt){    /*converts decimal into hexadecimal stri
 	return dataString;
 }
 
+int addressStringToInt(string address){
+	return charToInt(address[0])*16*16*16 + charToInt(address[1])*16*16 + charToInt(address[2])*16 + charToInt(address[3]);
+}
 bool checkRegister(char registerName)
 {
 	if ((((int)registerName) >= 65 && ((int)registerName <= 69)) || registerName == 'H' || registerName == 'L')

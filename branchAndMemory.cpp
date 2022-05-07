@@ -1,5 +1,44 @@
 #include "branchAndMemory.h"
+//for memory
+void openMemory(){
+	cout<<"Setting memory\n";
+	srand(time(0));
+	int data;
+	ifstream file("data.txt");
+	if(!file.is_open()){
+		file.close();
+		ofstream fileTemp("data.txt");
+		if(fileTemp.is_open()){
+			for(int i = 0; i <= 65535; i++){
+			data = rand()%255;
+			if(data < 16)
+				fileTemp << hex << 0 << data <<" ";
+			else
+				fileTemp << hex << data << " ";
+			}
+		}
+		else{
+			cout<<"File cannot creat\n";
+		}
+		fileTemp.close();
+	}	
+}
 
+string readMemory(int memory){
+	string data;
+	ifstream file("data.txt");
+	if(!file.is_open()){
+		cout<<"Cannot open the file\n";
+		return 0;
+	}
+	file.seekg(memory * 3);
+	file>> data;
+	file.close();
+	data[0]=toupper(data[0]);
+	data[1]=toupper(data[1]);
+	return data;
+}
+//for labels
 void labelPush(string line,int lineNumber, mappingLabel& M){
 	string labelName;
 	for(int i = 0; i < (int)line.length();i++){

@@ -36,9 +36,12 @@ int instructionDecode(string &line, registers &R, mappingLabel& M, int lineNumbe
 
 	else if(instruction == "MOV")
 		MOV(line, R, lineNumber);
+	else if(instruction == "LDA")
+		LDA(line, R, lineNumber);
 	/*Branching instruction*/
 	else if(instruction == "JC" || instruction == "JP" ||  instruction == "JM" || instruction == "JZ")
-		return JC_JP_JM_JZ(line, R, M, instruction, lineNumber);
+		return JC_JP_JM_JZ(line, R, M, instruction, lineNumber);	//branching instruction have return because they represents
+																	//where to go
 	else if(instruction == "JMP" || instruction == "JNC" ||instruction == "JNZ" ||instruction == "JPE" ||instruction == "JPO" )
 		return JMP_JNC_JNZ_JPE_JPO(line, R, M, instruction, lineNumber);
 	/*Arithmetic Instruction*/
@@ -99,6 +102,7 @@ int instructionDecode(string &line, registers &R, mappingLabel& M, int lineNumbe
 }
 
 int main(){
+	openMemory();
 	cout<<"After the code is written write \"STOP\" to indicate the code is all done.\n";
 	cout<<"Write your code\n";
 	cout<<"--------------------------------------------------------------------------\n";

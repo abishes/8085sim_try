@@ -8,6 +8,8 @@ int charToInt(char);
 char intToChar(int);
 int dataStringToInt(string);
 string dataIntToString(int);
+int addressStringToInt(string);
+string addressIntToString(int);
 bool checkRegister(char);
 
 bool checkData(char);

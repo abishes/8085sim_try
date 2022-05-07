@@ -29,7 +29,7 @@ string readMemory(int memory){
 	ifstream file("data.txt");
 	if(!file.is_open()){
 		cout<<"Cannot open the file\n";
-		return 0;
+		return string("XX");
 	}
 	file.seekg(memory * 3);
 	file>> data;
@@ -38,6 +38,21 @@ string readMemory(int memory){
 	data[1]=toupper(data[1]);
 	return data;
 }
+
+void writeMemory(int address, int data){
+	fstream file("data.txt");
+	if(!file.is_open()){
+		cout<<"Cannot open the file\n";
+		return;
+	}
+	file.seekp(address * 3);
+	if(data < 16)
+		file << hex << 0 << data <<" ";
+	else
+		file << hex << data << " ";
+	file.close();
+}
+
 //for labels
 void labelPush(string line,int lineNumber, mappingLabel& M){
 	string labelName;

@@ -12,7 +12,7 @@ using namespace std;
 //for mremory
 void openMemory();
 string readMemory(int);
-void writeMemory();
+void writeMemory(int, int);
 //for branching instruction
 class mappingLabel{
 	map<string, int> label;

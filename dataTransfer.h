@@ -9,5 +9,6 @@ void MOV(string&, registers&, int);
 void LDA(string&, registers&, int);
 void LXI(string&, registers&, int);
 void LDAX(string&, registers&, int);
+void STA(string&, registers&, int);
 
 #endif

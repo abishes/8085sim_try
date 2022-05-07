@@ -118,3 +118,20 @@ void LDAX(string& line, registers& R, int lineNumber){
 		cout<<"Invalid register pair(B/D) in line: "<<lineNumber<<endl;
 	}
 }
+
+void STA(string &line, registers &R, int lineNumber){
+	string address;
+	if (line[8] != 'H')
+	{
+		cout << "Data must end with H to indicate hexa in line :"<<lineNumber<<endl;
+		return;
+	}
+	for(int i =0; line[i+4] !='H';i++){
+		if(!checkData(line[i+4])){
+			cout<<"Invalid data in line:" << lineNumber <<endl;
+			return;
+		}
+		address.push_back(line[i+4]);
+	}
+	writeMemory(addressStringToInt(address),dataStringToInt(R.registerName('A')));
+}

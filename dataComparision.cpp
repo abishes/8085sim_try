@@ -25,21 +25,27 @@ int dataStringToInt(string dataString){ /*converts whole string(hexaDecimal) int
 }
 
 string dataIntToString(int dataInt){    /*converts decimal into hexadecimal string*/
-	int higherOrderData = (dataInt & 240) >> 4;
+	int higherOrderData = (dataInt & 240) >> 4;	// XXXX AAAA & 240 -> XXXX 0000 and >> 4 gives 0000 XXXX 
 	int lowerOrderData = dataInt & 15;
-	char higherOrderDataChar = intToChar(higherOrderData);
-	char lowerOrderDataChar = intToChar(lowerOrderData);
 	string dataString;
-	dataString.push_back(higherOrderDataChar);
-	dataString.push_back(lowerOrderDataChar);
-	dataString.push_back('\0');
-	dataString.shrink_to_fit();
+	dataString.push_back(intToChar(higherOrderData));
+	dataString.push_back(intToChar(lowerOrderData));
 	return dataString;
 }
 
 int addressStringToInt(string address){
 	return charToInt(address[0])*16*16*16 + charToInt(address[1])*16*16 + charToInt(address[2])*16 + charToInt(address[3]);
 }
+
+string addressIntToString(int addressInt){
+	string address;
+	int higherOrderAddress = (addressInt & 65280) >> 8;//XXXX XXXX AAAA AAA & 65280 -> XXXX XXXX 0000 0000
+	int lowerOrderAddress = addressInt & 255;
+	address += dataIntToString(higherOrderAddress);
+	address += dataIntToString(lowerOrderAddress);
+	return address;
+}
+
 bool checkRegister(char registerName)
 {
 	if ((((int)registerName) >= 65 && ((int)registerName <= 69)) || registerName == 'H' || registerName == 'L')

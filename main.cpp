@@ -66,6 +66,8 @@ int instructionDecode(string &line, registers &R, mappingLabel& M, int lineNumbe
 		INR(line, R, lineNumber);
 	else if(instruction == "DCR")
 		DCR(line, R, lineNumber);
+	else if(instruction == "INX" || instruction == "DCX")
+		INX_DCX(line, R, lineNumber);
 	/*Logical Instructions*/
 	else if(instruction =="CMP")
 		CMP(line, R, lineNumber);

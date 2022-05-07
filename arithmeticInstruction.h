@@ -9,4 +9,5 @@ void SUB_SBB(string&, registers&, string, int);
 void SUI_SBI(string&, registers&, string, int);
 void INR(string&, registers&, int);
 void DCR(string&, registers&, int);
+void INX_DCX(string&, registers&, int);
 #endif

@@ -229,3 +229,50 @@ void DCR(string& line, registers& R, int lineNumber){
 	string dataString = dataIntToString(dataInt);
 	R.registerSet(registerName, dataString);
 }
+
+void INX_DCX(string& line, registers& R, int lineNumber){
+	if(line[4] == 'B' || line[4] == 'D' || line[4] == 'H'){
+		string address;
+		if(line[4] == 'H'){
+			address += R.registerName('H');
+			address += R.registerName('L');
+		}
+		else{
+			address += R.registerName(line[4]);
+			address += R.registerName(char(line[4] + 1));
+		}
+		int addressInt = addressStringToInt(address);
+		if(line[0] == 'I'){
+			if((addressInt + 1) > 65535){
+				cout<<"Exceed memory ffff\n";
+				return;
+			}
+			addressInt++;
+		}
+		else{
+			if((addressInt - 1) < 0){
+				cout<<"Exceed memory 0000\n";
+				return;
+			}
+			addressInt--;
+		}
+		address = addressIntToString(addressInt);
+		string lowerAdderss;
+		lowerAdderss.push_back(address[2]);
+		lowerAdderss.push_back(address[3]); 
+		string higherAdderss;
+		higherAdderss.push_back(address[0]);
+		higherAdderss.push_back(address[1]);
+		if(line[4] == 'H'){
+			R.registerSet('H', higherAdderss);
+			R.registerSet('L', lowerAdderss);
+		}
+		else{
+			R.registerSet(line[4], higherAdderss);
+			R.registerSet(char (line[4]+1), lowerAdderss);
+		}
+	}
+	else{
+		cout<<"No such resister pairin line :"<<lineNumber;
+	}
+}

@@ -50,11 +50,11 @@ void MOV(string &line, registers &R, int lineNumber)
 	return;
 }
 
-void LDA(string &line, registers &R, int lineNumber){
+void LDA_STA(string &line, registers &R, int lineNumber){
 	string address;
 	if (line[8] != 'H')
 	{
-		cout << "Data must end with H to indicate hexa in line :"<<lineNumber<<endl;
+		cout << "Data must end with H in line :"<<lineNumber<<endl;
 		return;
 	}
 	for(int i =0; line[i+4] !='H';i++){
@@ -64,7 +64,11 @@ void LDA(string &line, registers &R, int lineNumber){
 		}
 		address.push_back(line[i+4]);
 	}
+	if(line[0] == 'L')
 	R.registerSet('A', readMemory(addressStringToInt(address)));
+	else{
+		writeMemory(addressStringToInt(address),dataStringToInt(R.registerName('A')));
+	}
 	//OR
 	// int addressInt = addressStringToInt(address);
 	// string data = readMemory(addressStringToInt(address));
@@ -104,34 +108,24 @@ void LXI(string& line, registers& R, int lineNumber){
 	}
 }
 
-void LDAX(string& line, registers& R, int lineNumber){
+void LDAX_STAX(string& line, registers& R, int lineNumber){
 	if(line[5] == 'B' || line[5] == 'D'){
 		string lineToLDA = "LDA ";
+		string lineToSTA = "STA ";
 		string Haddress = R.registerName(line[5]);
 		string Laddress = R.registerName(char(line[5] + 1));
-		lineToLDA = lineToLDA + Haddress + Laddress;
-		lineToLDA += 'H';
-		cout<<lineToLDA<<endl;
-		LDA(lineToLDA, R, lineNumber);
+		if(line[0] == 'L'){
+			lineToLDA = lineToLDA + Haddress + Laddress;
+			lineToLDA += 'H';
+			LDA_STA(lineToLDA, R, lineNumber);
+		}
+		else{
+			lineToSTA = lineToSTA + Haddress + Laddress;
+			lineToSTA += 'H';
+			LDA_STA(lineToSTA, R, lineNumber);
+		}
 	}
 	else{
 		cout<<"Invalid register pair(B/D) in line: "<<lineNumber<<endl;
 	}
-}
-
-void STA(string &line, registers &R, int lineNumber){
-	string address;
-	if (line[8] != 'H')
-	{
-		cout << "Data must end with H to indicate hexa in line :"<<lineNumber<<endl;
-		return;
-	}
-	for(int i =0; line[i+4] !='H';i++){
-		if(!checkData(line[i+4])){
-			cout<<"Invalid data in line:" << lineNumber <<endl;
-			return;
-		}
-		address.push_back(line[i+4]);
-	}
-	writeMemory(addressStringToInt(address),dataStringToInt(R.registerName('A')));
 }

@@ -33,17 +33,14 @@ int instructionDecode(string &line, registers &R, mappingLabel& M, int lineNumbe
 	/*Data transfer instructions*/
 	if (instruction == "MVI")
 		MVI(line, R, lineNumber);
-
 	else if(instruction == "MOV")
 		MOV(line, R, lineNumber);
-	else if(instruction == "LDA")
-		LDA(line, R, lineNumber);
+	else if(instruction == "LDA" || instruction == "STA")
+		LDA_STA(line, R, lineNumber);
 	else if(instruction == "LXI")
 		LXI(line, R, lineNumber);
-	else if(instruction == "LDAX")
-		LDAX(line, R, lineNumber);
-	else if(instruction == "STA")
-		STA(line, R, lineNumber);
+	else if(instruction == "LDAX" || instruction == "STAX")
+		LDAX_STAX(line, R, lineNumber);
 	/*Branching instruction*/
 	else if(instruction == "JC" || instruction == "JP" ||  instruction == "JM" || instruction == "JZ")
 		return JC_JP_JM_JZ(line, R, M, instruction, lineNumber);	//branching instruction have return because they represents

@@ -6,9 +6,8 @@
 
 void MVI(string&, registers&, int);
 void MOV(string&, registers&, int);
-void LDA(string&, registers&, int);
+void LDA_STA(string&, registers&, int);
 void LXI(string&, registers&, int);
-void LDAX(string&, registers&, int);
-void STA(string&, registers&, int);
+void LDAX_STAX(string&, registers&, int);
 
 #endif

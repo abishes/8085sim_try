@@ -1,3 +1,4 @@
 8085sim
 8085sim.exe
 *.o
+data.txt

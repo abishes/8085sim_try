@@ -48,8 +48,8 @@ string addressIntToString(int addressInt){
 
 bool checkRegister(char registerName)
 {
-	if ((((int)registerName) >= 65 && ((int)registerName <= 69)) || registerName == 'H' || registerName == 'L')
-		return 1;
+	if ((((int)registerName) >= 65 && ((int)registerName <= 69)) || registerName == 'H' || registerName == 'L' || registerName == 'M')
+		return 1;	//registerName = 'M' is memory pointed by HL
 	return 0;
 }
 

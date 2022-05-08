@@ -50,6 +50,14 @@ void MOV(string &line, registers &R, int lineNumber)
 		cout << "No such registers in line :"<<lineNumber<<endl;
 		return;
 	}
+	if(register1 == 'M'){
+		R.setM(R.registerName(register2));
+		return;
+	}
+	if( register2 == 'M'){
+		R.registerSet(register1, R.getM());
+		return;
+	}
 	R.registerSet(register1, register2);
 	return;
 }

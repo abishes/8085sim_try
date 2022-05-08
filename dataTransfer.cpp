@@ -3,11 +3,6 @@
 void MVI(string &line, registers &R, int lineNumber)
 {
 	char registerNname = line[4];
-	if (!checkRegister(registerNname))
-	{
-		cout << "No such register in line :"<<lineNumber<<endl;
-		return;
-	}
 	if (line[5] != SPACE)
 	{
 		cout << "Space required between Register and data in line :"<<lineNumber<<endl;
@@ -25,6 +20,16 @@ void MVI(string &line, registers &R, int lineNumber)
 	if (line[8] != 'H')
 	{
 		cout << "Data must end with H to indicate hexa in line :"<<lineNumber<<endl;
+		return;
+	}
+
+	if (registerNname == 'M'){ // for M (memory HL pair)
+		R.setM(dataString);
+		return;
+	}
+	if (!checkRegister(registerNname))
+	{
+		cout << "No such register in line :"<<lineNumber<<endl;
 		return;
 	}
 	R.registerSet(registerNname, dataString);

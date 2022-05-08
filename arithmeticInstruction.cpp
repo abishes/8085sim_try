@@ -6,7 +6,11 @@ void ADD_ADC(string& line, registers& R, string instruction, int lineNumber){
 		cout<<"No such register in line :"<<lineNumber<<endl;
 		return;
 	}
-	int dataInt = dataStringToInt(R.registerName('A')) + dataStringToInt(R.registerName(registerName));
+	int dataInt;
+	if (registerName == 'M')
+		dataInt =  dataStringToInt(R.registerName('A')) + dataStringToInt(R.getM());
+	else
+		dataInt = dataStringToInt(R.registerName('A')) + dataStringToInt(R.registerName(registerName));
 	if(instruction == "ADC"){
 		dataInt +=R.flagName('C');
 	}
@@ -102,7 +106,11 @@ void SUB_SBB(string& line, registers& R, string instruction, int lineNumber){
 		cout<<"No such register in line :"<<lineNumber<<endl;
 		return;
 	}
-	int dataInt = dataStringToInt(R.registerName('A')) - dataStringToInt(R.registerName(registerName));
+	int dataInt;
+	if (registerName == 'M')
+		dataInt = dataStringToInt(R.registerName('A')) - dataStringToInt(R.getM());
+	else
+		dataInt = dataStringToInt(R.registerName('A')) - dataStringToInt(R.registerName(registerName));
 	if(instruction == "SBB"){
 		dataInt -=R.flagName('C');
 	}

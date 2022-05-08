@@ -165,6 +165,9 @@ void registers::registerDisplay()
 }
 
 string registers::getM(){
+	string address = H;
+	address += L;
+	M = readMemory(addressStringToInt(address));
 	return M;
 }
 void registers::setM(string data){

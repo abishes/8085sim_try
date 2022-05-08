@@ -1,4 +1,6 @@
 #include <iostream>
+#include "branchAndMemory.h"
+#include "dataComparision.h"
 #ifndef registersFlags
 #define registersFlags
 using namespace std;
@@ -16,7 +18,7 @@ public:
 
 class registers: public flags
 {
-    string A, B, C, D, E, H, L;
+    string A, B, C, D, E, H, L, M;
 
 public:
     registers();
@@ -24,6 +26,8 @@ public:
     void registerSet(char, string data);
     void registerSet(char, char);
     void registerDisplay();
+    string getM();
+    void setM(string);
 };
 
 #endif

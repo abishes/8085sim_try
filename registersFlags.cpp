@@ -163,3 +163,13 @@ void registers::registerDisplay()
 	cout << "|" << A << "H\t|" << B << "H\t|" << C << "H\t|" << D << "H\t|" << E << "H\t|" << H << "H\t|" << L << "H\t|\n";
 	cout << " -------------------------------------------------------\n";
 }
+
+string registers::getM(){
+	return M;
+}
+void registers::setM(string data){
+	M = data;
+	string address = H;
+	address += L;
+	writeMemory(addressStringToInt(address), dataStringToInt(data));
+}

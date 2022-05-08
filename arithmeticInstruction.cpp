@@ -298,3 +298,47 @@ void INX_DCX(string& line, registers& R, int lineNumber){
 		cout<<"No such resister pairin line :"<<lineNumber;
 	}
 }
+
+void DAA(registers& R){
+	string dataString = R.registerName('A');
+	int carry = 0;
+	int HigherData = charToInt(dataString[0]);
+	int LowerData = charToInt(dataString[1]);
+	if(LowerData > 9 || R.flagName('A')){
+		LowerData += 6;
+		if(LowerData > 15){
+			LowerData -= 16;
+			carry = 1;
+			R.flagSet('A');
+		}
+	}
+	HigherData += carry;
+	if(HigherData <= 9 && !R.flagName('C')){
+		R.flagReset('C');
+	}
+	if(HigherData > 9 || R.flagName('C')){
+		HigherData += 6;
+		if(HigherData > 15){
+			HigherData -= 16;
+			R.flagSet('C');
+		}
+	}
+	dataString[0] = intToChar(HigherData);
+	dataString[1] = intToChar(LowerData);
+	R.registerSet('A',dataString);
+	//Zero flag
+	if (dataStringToInt(dataString) == 0)
+		R.flagSet('Z');
+	else
+		R.flagReset('Z');
+	//sign flag
+	if(signChecker(dataStringToInt(dataString)))
+		R.flagSet('S');
+	else
+		R.flagReset('S');
+	/*parity flag*/
+	if(parityChecker(dataStringToInt(dataString)))
+		R.flagSet('P');
+	else
+		R.flagReset('P');
+}

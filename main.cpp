@@ -70,6 +70,8 @@ int instructionDecode(string &line, registers &R, mappingLabel& M, int lineNumbe
 		INX_DCX(line, R, lineNumber);
 	else if(instruction == "DAA")
 		DAA(R);
+	else if(instruction == "DAD")
+		DAD(line, R, lineNumber);
 	/*Logical Instructions*/
 	else if(instruction =="CMP")
 		CMP(line, R, lineNumber);

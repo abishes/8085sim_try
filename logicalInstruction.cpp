@@ -6,7 +6,11 @@ void CMP(string& line, registers& R, int lineNumber){ /*compare instruction with
 		cout<<"No such register in line :"<<lineNumber<<endl;
 		return;
 	}
-	int result = (R.registerName('A')).compare(R.registerName(registerName));/*comparing strings in register A and given register*/
+	int result;
+	if(registerName == 'M')
+		result = (R.registerName('A')).compare(R.getM());
+	else
+		result = (R.registerName('A')).compare(R.registerName(registerName));/*comparing strings in register A and given register*/
 	if(result == 0){
 		R.flagSet('Z');
 	}
@@ -57,13 +61,22 @@ void ANA_ORA_XRA(string& line, registers& R, string instruction, int lineNumber)
 		return;
 	}
 	int dataInt;
-	if(instruction == "ANA")
-		dataInt = dataStringToInt(R.registerName(registerName)) & dataStringToInt(R.registerName('A'));
-	if(instruction == "ORA")
-		dataInt = dataStringToInt(R.registerName(registerName)) | dataStringToInt(R.registerName('A'));
-	if(instruction == "XRA")
-		dataInt = dataStringToInt(R.registerName(registerName)) ^ dataStringToInt(R.registerName('A'));
-	
+	if(registerName == 'M'){
+		if(instruction == "ANA")
+			dataInt = dataStringToInt(R.registerName('A')) & dataStringToInt(R.getM());
+		if(instruction == "ORA")
+			dataInt = dataStringToInt(R.registerName('A')) | dataStringToInt(R.getM());
+		if(instruction == "XRA")
+			dataInt = dataStringToInt(R.registerName('A')) ^ dataStringToInt(R.getM());
+	}
+	else{
+		if(instruction == "ANA")
+			dataInt = dataStringToInt(R.registerName(registerName)) & dataStringToInt(R.registerName('A'));
+		if(instruction == "ORA")
+			dataInt = dataStringToInt(R.registerName(registerName)) | dataStringToInt(R.registerName('A'));
+		if(instruction == "XRA")
+			dataInt = dataStringToInt(R.registerName(registerName)) ^ dataStringToInt(R.registerName('A'));
+	}
 	string dataString = dataIntToString(dataInt);
 	//flags
 	//Zero flag

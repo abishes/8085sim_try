@@ -216,12 +216,19 @@ void INR(string& line, registers& R, int lineNumber){
 		cout<<"No such register in line :"<<lineNumber<<endl;
 		return;
 	}
-	int dataInt = dataStringToInt(R.registerName(registerName)) + 1;
+	int dataInt;
+	if(registerName == 'M')
+		dataInt = dataStringToInt(R.getM()) + 1;
+	else
+	dataInt = dataStringToInt(R.registerName(registerName)) + 1;
 	if(dataInt > 255){
 		dataInt &= 255;
 	}
 	string dataString = dataIntToString(dataInt);
-	R.registerSet(registerName, dataString);
+	if (registerName == 'M')
+		R.setM(dataString);
+	else
+		R.registerSet(registerName, dataString);
 }
 
 void DCR(string& line, registers& R, int lineNumber){
@@ -230,12 +237,19 @@ void DCR(string& line, registers& R, int lineNumber){
 		cout<<"No such register in line :"<<lineNumber<<endl;
 		return;
 	}
-	int dataInt = dataStringToInt(R.registerName(registerName)) - 1;
+	int dataInt;
+	if(registerName == 'M')
+		dataInt = dataStringToInt(R.getM()) - 1;
+	else
+		dataInt = dataStringToInt(R.registerName(registerName)) - 1;
 	if(dataInt < 0){
 		dataInt = 255;
 	}
 	string dataString = dataIntToString(dataInt);
-	R.registerSet(registerName, dataString);
+	if (registerName == 'M')
+		R.setM(dataString);
+	else
+		R.registerSet(registerName, dataString);
 }
 
 void INX_DCX(string& line, registers& R, int lineNumber){

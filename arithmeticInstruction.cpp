@@ -342,3 +342,37 @@ void DAA(registers& R){
 	else
 		R.flagReset('P');
 }
+
+void DAD(string& line, registers& R, int lineNumber){
+	if(line.length() < 5){
+		cout<<"No register in line: "<< lineNumber <<endl;
+		return;
+	}
+	if( line[4] == 'B'|| line[4] == 'D'|| line[4] == 'H'){	//line[4] is register pair name
+		int data16_1 = (dataStringToInt(R.registerName('H')) << 8) + dataStringToInt(R.registerName('L'));
+							// shifting << 8 gives XXXX XXXX 0000 0000
+		int data16_2;
+		if(line[4] == 'H')
+			data16_2 = data16_1;
+		else
+			data16_2 = (dataStringToInt(R.registerName(line[4])) << 8) + dataStringToInt(R.registerName(char(line[4] + 1)));
+		
+		data16_1 += data16_2;
+		if(data16_1 > 0xffff){
+			R.flagSet('C');
+			data16_1 -= 0x10000;
+		}
+		else
+			R.flagReset('C');
+		string dataString = addressIntToString(data16_1);
+		string dataStrHigher, dataStrLower;
+		dataStrHigher.push_back(dataString[0]);
+		dataStrHigher.push_back(dataString[1]);
+		dataStrLower.push_back(dataString[2]);
+		dataStrLower.push_back(dataString[3]);
+		R.registerSet('H', dataStrHigher);
+		R.registerSet('L', dataStrLower);
+	}
+	else
+		cout<<"No such register pair in line: "<< lineNumber << endl;
+}

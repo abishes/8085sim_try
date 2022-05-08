@@ -11,4 +11,5 @@ void INR(string&, registers&, int);
 void DCR(string&, registers&, int);
 void INX_DCX(string&, registers&, int);
 void DAA(registers&);
+void DAD(string&, registers&, int);
 #endif

@@ -4,13 +4,13 @@
 #ifndef dataTransfer
 #define dataTransfer
 
-void MVI(string&, registers&, int);
-void MOV(string&, registers&, int);
-void LDA_STA(string&, registers&, int);
-void LXI(string&, registers&, int);
+void MVI(string&, registers&);
+void MOV(string&, registers&);
+void LDA_STA(string&, registers&);
+void LXI(string&, registers&);
 void LDAX_STAX(string&, registers&, int);
-void LHLD(string&, registers&, int);
-void SHLD(string&, registers&, int);
+void LHLD(string&, registers&);
+void SHLD(string&, registers&);
 void XCHG(registers&);
 
 #endif

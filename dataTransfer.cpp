@@ -1,57 +1,62 @@
 #include "dataTransfer.h"
 
-void MVI(string &line, registers &R, int lineNumber)
+void MVI(string &line, registers &R)
 {
 	char registerNname = line[4];
-	if (line[5] != SPACE)
-	{
-		cout << "Space required between Register and data in line :"<<lineNumber<<endl;
+	if(line.length() < 9){
+		throw(error_instructionSize);
 		return;
 	}
-	if (!(checkData(line[6]) && checkData(line[7])))
-	{
-		cout << "invalid data in line :"<<lineNumber<<endl;
+	if (!checkRegister(registerNname)){
+		throw(error_register);
+		return;
+	}
+
+	if (line[5] != SPACE){
+		throw(error_space);
+		return;
+	}
+
+	if (!(checkData(line[6]) && checkData(line[7]))){
+		throw(error_data);
+		return;
+	}
+
+	if (line[8] != 'H'){
+		throw(error_H);
 		return;
 	}
 	string dataString;
 	dataString.push_back(line[6]);
 	dataString.push_back(line[7]);
-	
-	if (line[8] != 'H')
-	{
-		cout << "Data must end with H to indicate hexa in line :"<<lineNumber<<endl;
-		return;
-	}
 
 	if (registerNname == 'M'){ // for M (memory HL pair)
 		R.setM(dataString);
 		return;
 	}
-	if (!checkRegister(registerNname))
-	{
-		cout << "No such register in line :"<<lineNumber<<endl;
-		return;
-	}
+	
 	R.registerSet(registerNname, dataString);
 	return;
 }
 
-void MOV(string &line, registers &R, int lineNumber)
+void MOV(string &line, registers &R)
 {
 	char register1 = line[4];
-	if (line[5] != SPACE)
-	{
-		cout << "No spaces between registers in line :"<<lineNumber<<endl;
+	if(line.length() < 7){
+		throw(error_instructionSize);
+		return;
+	}
+	if (line[5] != SPACE){
+		throw(error_space);
 		return;
 	}
 	char register2 = line[6];
-	if (!(checkRegister(register1) && checkRegister(register2)))
-	{
-		cout << "No such registers in line :"<<lineNumber<<endl;
+	if (!(checkRegister(register1) && checkRegister(register2))){
+		throw(error_register);
 		return;
 	}
 	if(register1 == 'M'){
-		R.setM(R.registerName(register2));
+		throw(error_H);
 		return;
 	}
 	if( register2 == 'M'){
@@ -62,16 +67,20 @@ void MOV(string &line, registers &R, int lineNumber)
 	return;
 }
 
-void LDA_STA(string &line, registers &R, int lineNumber){
+void LDA_STA(string &line, registers &R){
 	string address;
+	if(line.length() < 9){
+		throw(error_instructionSize);
+		return;
+	}
 	if (line[8] != 'H')
 	{
-		cout << "Data must end with H in line :"<<lineNumber<<endl;
+		throw(error_H);
 		return;
 	}
 	for(int i =0; line[i+4] !='H';i++){
 		if(!checkData(line[i+4])){
-			cout<<"Invalid data in line:" << lineNumber <<endl;
+			throw(error_data);
 			return;
 		}
 		address.push_back(line[i+4]);
@@ -87,19 +96,25 @@ void LDA_STA(string &line, registers &R, int lineNumber){
 	// R.registerSet('A', data);
 }
 
-void LXI(string& line, registers& R, int lineNumber){
+void LXI(string& line, registers& R){
 	string Haddress;	//higher order address
 	string Laddress;	//lower order address
+	if(line.length() < 11){
+		throw(error_instructionSize);
+		return;
+	}
 	if(line[5] != ' '){
-		cout<<"No space in line: "<< lineNumber << endl;
+		throw(error_space);
+		return;
 	}
 	if(line[4] == 'B' || line[4] == 'D' || line[4] == 'H'){
 		if(line[10] != 'H'){
-			cout << "Data must be of 4-byte and end with H in line: "<< lineNumber<< endl;
+			throw(error_H);
+			return;
 		}
 		for(int i =0; line[i+8] !='H';i++){
 			if(!checkData(line[i+6]) || !checkData(line[i+8])){
-				cout<<"Invalid data in line:" << lineNumber <<endl;
+				throw(error_data);
 				return;
 			}
 			Haddress.push_back(line[i+6]);
@@ -115,26 +130,30 @@ void LXI(string& line, registers& R, int lineNumber){
 		}
 	}
 	else{
-		cout<<"No such register pair in line: " << lineNumber << endl;
+		throw(error_registerPair);
 		return;
 	}
 }
 
 void LDAX_STAX(string& line, registers& R, int lineNumber){
+	if(line.length()< 6){
+		throw(error_instructionSize);
+		return;
+	}
 	if(line[5] == 'B' || line[5] == 'D'){
 		string lineToLDA = "LDA ";
 		string lineToSTA = "STA ";
 		string Haddress = R.registerName(line[5]);
 		string Laddress = R.registerName(char(line[5] + 1));
-		if(line[0] == 'L'){
+		if(line[0] == 'L'){		//line[0]='l' represents it is ldax instruction.
 			lineToLDA = lineToLDA + Haddress + Laddress;
 			lineToLDA += 'H';
-			LDA_STA(lineToLDA, R, lineNumber);
+			LDA_STA(lineToLDA, R);
 		}
 		else{
 			lineToSTA = lineToSTA + Haddress + Laddress;
 			lineToSTA += 'H';
-			LDA_STA(lineToSTA, R, lineNumber);
+			LDA_STA(lineToSTA, R);
 		}
 	}
 	else{
@@ -142,45 +161,53 @@ void LDAX_STAX(string& line, registers& R, int lineNumber){
 	}
 }
 
-void LHLD(string& line, registers& R, int lineNumber){
+void LHLD(string& line, registers& R){
 	string address;
+	if(line.length() < 10){
+		throw(error_instructionSize);
+		return;
+	}
 	if (line[9] != 'H')
 	{
-		cout << "Data must end with H in line :"<<lineNumber<<endl;
+		throw(error_H);
 		return;
 	}
 	for(int i =0; line[i+5] !='H';i++){
 		if(!checkData(line[i+5])){
-			cout<<"Invalid data in line:" << lineNumber <<endl;
+			throw(error_data);
 			return;
 		}
 		address.push_back(line[i+5]);
 	}
 	R.registerSet('L', readMemory(addressStringToInt(address)));
-	if((addressStringToInt(address) + 1) > 65535){
-		cout << "Exceed memory FFFF\n";
+	if((addressStringToInt(address) + 1) > 0xffff){
+		throw(error_memoryExceed);
 		return;
 	}
 	R.registerSet('H', readMemory(addressStringToInt(address) + 1));
 }
 
-void SHLD(string& line, registers& R, int lineNumber){
+void SHLD(string& line, registers& R){
 	string address;
+	if(line.length() < 10){
+		throw(error_instructionSize);
+		return;
+	}
 	if (line[9] != 'H')
 	{
-		cout << "Data must end with H in line :"<<lineNumber<<endl;
+		throw(error_H);
 		return;
 	}
 	for(int i =0; line[i+5] !='H';i++){
 		if(!checkData(line[i+5])){
-			cout<<"Invalid data in line:" << lineNumber <<endl;
+			throw(error_data);
 			return;
 		}
 		address.push_back(line[i+5]);
 	}
 	writeMemory(addressStringToInt(address), dataStringToInt(R.registerName('L')));
-	if(addressStringToInt(address) > 65535){
-		cout << "Exceed memory FFFF\n";
+	if(addressStringToInt(address) > 0xffff){
+		throw(error_memoryExceed);
 		return;
 	}
 	writeMemory((addressStringToInt(address) + 1),dataStringToInt(R.registerName('H')));

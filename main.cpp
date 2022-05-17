@@ -10,6 +10,7 @@
 #include "branchingInstruction.h"
 
 int instructionDecode(string &line, registers &R, mappingLabel& M, int lineNumber){
+	try{
 	if(line.find(':') != string::npos){
 			string lineTemp;
 			int instructionStart=line.find(':')+1;
@@ -32,19 +33,19 @@ int instructionDecode(string &line, registers &R, mappingLabel& M, int lineNumbe
 	}
 	/*Data transfer instructions*/
 	if (instruction == "MVI")
-		MVI(line, R, lineNumber);
+		MVI(line, R);
 	else if(instruction == "MOV")
-		MOV(line, R, lineNumber);
+		MOV(line, R);
 	else if(instruction == "LDA" || instruction == "STA")
-		LDA_STA(line, R, lineNumber);
+		LDA_STA(line, R);
 	else if(instruction == "LXI")
-		LXI(line, R, lineNumber);
+		LXI(line, R);
 	else if(instruction == "LDAX" || instruction == "STAX")
 		LDAX_STAX(line, R, lineNumber);
 	else if(instruction == "LHLD")
-		LHLD(line, R, lineNumber);
+		LHLD(line, R);
 	else if(instruction == "SHLD")
-		SHLD(line, R, lineNumber);
+		SHLD(line, R);
 	else if(instruction == "XCHG")
 		XCHG(R);	
 	/*Branching instruction*/
@@ -113,7 +114,40 @@ int instructionDecode(string &line, registers &R, mappingLabel& M, int lineNumbe
 		cout<<"No such instruction in line :"<<lineNumber<<endl;
 
 	return (lineNumber - 1);	//since this function is called by lvalue i in main, and i is index in main so, decreasing
-								//lineNumber by 1 gives i its original index.
+							//lineNumber by 1 gives i its original index.
+	}
+
+	catch(int errorName){
+		switch(errorName){
+		case error_data:
+		cout << "No such data in line: " << lineNumber << endl;
+		break;
+		case error_register:
+		cout << "No such register in line: " << lineNumber << endl;
+		break;
+		case error_space:
+		cout << "Single space needed in line: " << lineNumber << endl;
+		break;
+		case error_H:
+		cout << "Data must end with 'H' in line: " << lineNumber << endl;
+		break;
+		case error_instructionSize:
+		cout << "Missing full instruction in line: " << lineNumber << endl;
+		break;
+		case error_flag:
+		cout << "No such flag in line: " << lineNumber << endl;
+		break;
+		case error_registerPair:
+		cout << "No such register pair in line: " << lineNumber << endl;
+		break;
+		case error_memoryExceed:
+		cout << "Memory exceed from instruction in line: " << lineNumber <<endl;
+		break;
+		default:
+		cout << "Error in line: " << lineNumber << endl;
+		}
+		return (lineNumber - 1);
+	}
 }
 
 int main(){

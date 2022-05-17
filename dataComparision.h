@@ -4,6 +4,15 @@
 #define SPACE 32
 using namespace std;
 
+const int error_data =  0;
+const int error_register= 1;
+const int error_space= 2;
+const int error_H= 3;
+const int error_instructionSize= 4;
+const int error_flag= 5;
+const int error_registerPair=6;
+const int error_memoryExceed= 7;
+
 int charToInt(char);
 char intToChar(int);
 int dataStringToInt(string);

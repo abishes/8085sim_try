@@ -60,6 +60,26 @@ bool checkData(char data)
 	return 0;
 }
 
+bool checkAddress(const string& address){
+	if(address.length() != 4)
+		return 0;
+	for(int i = 0; i< 4; i++){
+		if(!checkData(address[i]))
+			return 0;
+	}
+	return 1;
+}
+
+bool check2BitData(const string& data){
+	if(data.length() != 2)
+		return 0;
+	if(!checkData(data[0]))
+			return 0;
+	if(!checkData(data[1]))
+			return 0;
+	return 1;
+}
+
 bool parityChecker(int data){
 	int i, count = 0, bit;
 	for(i = 0; i < 8; i++){

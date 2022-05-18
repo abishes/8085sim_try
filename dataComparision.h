@@ -21,9 +21,9 @@ string dataIntToString(int);
 int addressStringToInt(string);
 string addressIntToString(int);
 bool checkRegister(char);
-
 bool checkData(char);
-
+bool checkAddress(const string&);
+bool check2BitData(const string&);
 bool parityChecker(int);
 
 bool signChecker(int);

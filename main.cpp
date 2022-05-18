@@ -141,8 +141,11 @@ int instructionDecode(string &line, registers &R, mappingLabel& M, int lineNumbe
 		cout << "No such register pair in line: " << lineNumber << endl;
 		break;
 		case error_memoryExceed:
-		cout << "Memory exceed from instruction in line: " << lineNumber <<endl;
+		cout << "Memory exceed from instruction in line: " << lineNumber << endl;
 		break;
+		case error_label:
+		cout << "No such label in line: "<< lineNumber << endl;
+		return (lineNumber - 1);
 		default:
 		cout << "Error in line: " << lineNumber << endl;
 		}

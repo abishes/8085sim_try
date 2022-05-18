@@ -12,6 +12,7 @@ const int error_instructionSize= 4;
 const int error_flag= 5;
 const int error_registerPair=6;
 const int error_memoryExceed= 7;
+const int error_label=8;
 
 int charToInt(char);
 char intToChar(int);

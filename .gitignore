@@ -1,4 +1,6 @@
 8085sim
 8085sim.exe
+test
+.vscode/
 *.o
 data.txt

@@ -1,6 +1,7 @@
 #ifndef branch_memory
 #define branch_memory
 #include <string>
+#include <vector>
 #include <iostream>
 #include <map>
 #include <fstream>
@@ -13,6 +14,7 @@ using namespace std;
 void openMemory();
 string readMemory(int);
 void writeMemory(int, int);
+
 //for branching instruction
 class mappingLabel{
 	map<string, int> label;
@@ -22,5 +24,5 @@ class mappingLabel{
 };
 
 void labelPush(string, int, mappingLabel&);
-
+void codeFromFile(const char*, vector<string>&, mappingLabel&, int&);
 #endif

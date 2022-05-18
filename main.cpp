@@ -153,32 +153,39 @@ int instructionDecode(string &line, registers &R, mappingLabel& M, int lineNumbe
 	}
 }
 
-int main(){
+int main(int argc, char* argv[]){
 	openMemory();
-	cout<<"After the code is written write \"STOP\" to indicate the code is all done.\n";
-	cout<<"Write your code\n";
-	cout<<"--------------------------------------------------------------------------\n";
 	registers R;
 	vector<string> code;
 	mappingLabel M;
 	string line;
 	int lineNumber = 1;
-	while(lineNumber){
-		getline(cin, line);
-		if(line == "STOP"){
-			break;
+	if(argc == 1){
+		cout<<"After the code is written write \"STOP\" to indicate the code is all done.\n";
+		cout<<"Write your code\n";
+		cout<<"--------------------------------------------------------------------------\n";
+		while(lineNumber){
+			getline(cin, line);
+			if(line == "STOP"){
+				break;
+			}
+			if(line[0] != '\0')
+				code.push_back(line);
+			if(line.find(':') != string::npos){
+				labelPush(line, lineNumber, M);
+			}
+			lineNumber++;
 		}
-		if(line[0] != '\0')
-			code.push_back(line);
-		if(line.find(':') != string::npos){
-			labelPush(line, lineNumber, M);
-		}
-		lineNumber++;
 	}
-	int lengthOfCode = code.size();
+	else{
+		cout << "Reading from file...\n";
+		cout << "...\n";
+		cout << "...\n";
+		codeFromFile(argv[1], code, M, lineNumber);
+	}
 	cout<<"------------------------------------------------------\n";
 	cout<<"ERRORS:\n";
-	for(int i = 0;i <(int) lengthOfCode; i++){
+	for(int i = 0;i <(int) lineNumber; i++){
 		if(i<0)
 			break;
 		i = instructionDecode(code[i], R, M, i+1);

@@ -75,16 +75,16 @@ int instructionDecode(string &line, registers &R, mappingLabel& M, int lineNumbe
 		DAD(line, R);
 	/*Logical Instructions*/
 	else if(instruction =="CMP")
-		CMP(line, R, lineNumber);
+		CMP(line, R);
 
 	else if(instruction == "CPI")
-		CPI(line, R, lineNumber);
+		CPI(line, R);
 
 	else if(instruction == "ANA" || instruction == "ORA" || instruction == "XRA" )
-		ANA_ORA_XRA(line, R, instruction, lineNumber);
+		ANA_ORA_XRA(line, R);
 
 	else if(instruction == "ANI" ||instruction == "ORI" || instruction == "XRI" )
-		ANI_ORI_XRI(line, R, instruction, lineNumber);
+		ANI_ORI_XRI(line, R);
 
 	else if(instruction == "RLC")
 		RLC(R);

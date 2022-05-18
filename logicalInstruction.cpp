@@ -1,11 +1,11 @@
 #include "logicalInstruction.h"
 
-void CMP(string& line, registers& R, int lineNumber){ /*compare instruction with accmulator: to compare two datas*/
+void CMP(string& line, registers& R){ /*compare instruction with accmulator: to compare two datas*/
 	char registerName = line[4];
-	if(!checkRegister(registerName)){
-		cout<<"No such register in line :"<<lineNumber<<endl;
-		return;
-	}
+	if(line.length() < 5)
+		throw(error_instructionSize);
+	if(!checkRegister(registerName))
+		throw(error_register);
 	int result;
 	if(registerName == 'M')
 		result = (R.registerName('A')).compare(R.getM());
@@ -23,24 +23,20 @@ void CMP(string& line, registers& R, int lineNumber){ /*compare instruction with
 	}
 }
 
-void CPI(string& line, registers& R, int lineNumber){   /*compare immediate eith accmulator instruction*/
+void CPI(string& line, registers& R){   /*compare immediate eith accmulator instruction*/
 	string dataString;
+	if(line.length() < 7)
+		throw(error_instructionSize);
 	char dataChar = line[4];
-	if(!checkData(dataChar)){
-		cout<<"invalid datain line :"<<lineNumber<<endl;
-		return;
-	}
+	if(!checkData(dataChar))
+		throw(error_data);
 	dataString.push_back(dataChar);
 	dataChar = line[5];
-	if(!checkData(dataChar)){
-		cout<<"invalid datain line :"<<lineNumber<<endl;
-		return;
-	}
+	if(!checkData(dataChar))
+		throw(error_data);
 	dataString.push_back(dataChar);
-	if(line[6] != 'H'){
-		cout<<"data must end with 'H'in line :"<<lineNumber<<endl;
-		return;
-	}
+	if(line[6] != 'H')
+		throw(error_H);
 	int result = (R.registerName('A')).compare(dataString);
 	if(result == 0){
 		R.flagSet('Z');
@@ -54,27 +50,27 @@ void CPI(string& line, registers& R, int lineNumber){   /*compare immediate eith
 	}
 }
 
-void ANA_ORA_XRA(string& line, registers& R, string instruction, int lineNumber){
+void ANA_ORA_XRA(string& line, registers& R){
 	char registerName = line[4];
-	if (!checkRegister(registerName)){
-		cout<<"No such register in line :"<<lineNumber<<endl;
-		return;
-	}
+	if(line.length() < 5)
+		throw(error_instructionSize);
+	if (!checkRegister(registerName))
+		throw(error_register);
 	int dataInt;
 	if(registerName == 'M'){
-		if(instruction == "ANA")
+		if(line[0]=='A')	//line[0]='A' for ANA instruction
 			dataInt = dataStringToInt(R.registerName('A')) & dataStringToInt(R.getM());
-		if(instruction == "ORA")
+		if(line[0]=='O')	//line[0]='O' for ORA instruction
 			dataInt = dataStringToInt(R.registerName('A')) | dataStringToInt(R.getM());
-		if(instruction == "XRA")
+		if(line[0]=='X')	//line[0]='X' for XRA instruction
 			dataInt = dataStringToInt(R.registerName('A')) ^ dataStringToInt(R.getM());
 	}
 	else{
-		if(instruction == "ANA")
+		if(line[0]=='A')
 			dataInt = dataStringToInt(R.registerName(registerName)) & dataStringToInt(R.registerName('A'));
-		if(instruction == "ORA")
+		if(line[0]=='O')
 			dataInt = dataStringToInt(R.registerName(registerName)) | dataStringToInt(R.registerName('A'));
-		if(instruction == "XRA")
+		if(line[0]=='X')
 			dataInt = dataStringToInt(R.registerName(registerName)) ^ dataStringToInt(R.registerName('A'));
 	}
 	string dataString = dataIntToString(dataInt);
@@ -100,31 +96,27 @@ void ANA_ORA_XRA(string& line, registers& R, string instruction, int lineNumber)
 	R.registerSet('A',dataString);
 }
 
-void ANI_ORI_XRI(string& line, registers& R, string instruction, int lineNumber){
+void ANI_ORI_XRI(string& line, registers& R){
 	string dataString;
+	if(line.length() < 7)
+		throw(error_instructionSize);
 	char dataChar = line[4];
-	if(!checkData(dataChar)){
-		cout<<"invalid data in line :"<<lineNumber<<endl;
-		return;
-	}
+	if(!checkData(dataChar))
+		throw(error_data);
 	dataString.push_back(dataChar);
 	dataChar = line[5];
-	if(!checkData(dataChar)){
-		cout<<"invalid data in line :"<<lineNumber<<endl;
-		return;
-	}
+	if(!checkData(dataChar))
+		throw(error_data);
 	dataString.push_back(dataChar);
-	if(line[6] != 'H'){
-		cout<<"data must end with 'H' in line :"<<lineNumber<<endl;
-		return;
-	}
+	if(line[6] != 'H')
+		throw(error_H);
 	
 	int dataInt;
-	if(instruction == "ANI")
+	if(line[0]=='A')	//line[0]='A' for ANI instruction
 		dataInt = dataStringToInt(R.registerName('A')) & dataStringToInt(dataString);
-	if(instruction == "ORI")
+	if(line[0]=='O')	//line[0]='O' for ORI instruction
 		dataInt = dataStringToInt(R.registerName('A')) | dataStringToInt(dataString);
-	if(instruction == "XRI")
+	if(line[0]=='X')	//line[0]='X' for XRI instruction
 		dataInt = dataStringToInt(R.registerName('A')) ^ dataStringToInt(dataString);
 	dataString = dataIntToString(dataInt);
 	//flags

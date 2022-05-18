@@ -1,17 +1,17 @@
 #include "arithmeticInstruction.h"
 
-void ADD_ADC(string& line, registers& R, string instruction, int lineNumber){
+void ADD_ADC(string& line, registers& R){
 	char registerName = line[4];
-	if( !checkRegister(registerName)){
-		cout<<"No such register in line :"<<lineNumber<<endl;
-		return;
-	}
+	if(line.length() < 5)
+		throw(error_instructionSize);
+	if( !checkRegister(registerName))
+		throw(error_register);
 	int dataInt;
 	if (registerName == 'M')
 		dataInt =  dataStringToInt(R.registerName('A')) + dataStringToInt(R.getM());
 	else
 		dataInt = dataStringToInt(R.registerName('A')) + dataStringToInt(R.registerName(registerName));
-	if(instruction == "ADC"){
+	if(line[2]== 'C'){	//line[2]='C' is possible in ADC only
 		dataInt +=R.flagName('C');
 	}
 	int carry = (dataInt & 256) >> 8;  /*246 in binary is 1 0000 0000, used for getting carry*/
@@ -46,30 +46,30 @@ void ADD_ADC(string& line, registers& R, string instruction, int lineNumber){
 	R.registerSet('A',dataString);
 }
 
-void ADI_ACI(string& line, registers& R, string instruction, int lineNumber){
+void ADI_ACI(string& line, registers& R){
 	string dataString;
 	char dataChar = line[4];
-	if(!checkData(dataChar)){
-		cout<<"invalid data in line :"<<lineNumber<<endl;
-		return;
-	}
+	if(line.length() < 7)
+		throw(error_instructionSize);
+	
+	if(!checkData(dataChar))
+		throw(error_data);
+
 	dataString.push_back(dataChar);
 	dataChar = line[5];
-	if(!checkData(dataChar)){
-		cout<<"invalid data in line :"<<lineNumber<<endl;
-		return;
-	}
+	if(!checkData(dataChar))
+		throw(error_data);
+
 	dataString.push_back(dataChar);
-	if(line[6] != 'H'){
-		cout<<"data must end with 'H' in line :"<<lineNumber<<endl;
-		return;
-	}
+	if(line[6] != 'H')
+		throw(error_H);
+
 	int dataInt = dataStringToInt(R.registerName('A')) + dataStringToInt(dataString);
-	if(instruction == "ACI"){
+	if(line[1]=='C'){	//line[1]='C' is possible only in ACI instruction 
 		dataInt +=R.flagName('C');
 	}
-	int carry = (dataInt & 256) >> 8;  /*246 in binary is 1 0000 0000, used for getting carry*/
-	dataInt &= 255;
+	int carry = (dataInt & 0x100) >> 8;  /*hex(100) in binary is 1 0000 0000, used for getting carry*/
+	dataInt &= 0xff;
 	dataString= dataIntToString(dataInt);
 	/*Flags*/
 	/*Carry flag*/
@@ -100,23 +100,24 @@ void ADI_ACI(string& line, registers& R, string instruction, int lineNumber){
 	R.registerSet('A',dataString);
 }
 
-void SUB_SBB(string& line, registers& R, string instruction, int lineNumber){
+void SUB_SBB(string& line, registers& R){
 	char registerName = line[4];
-	if( !checkRegister(registerName)){
-		cout<<"No such register in line :"<<lineNumber<<endl;
-		return;
-	}
+	if(line.length() < 5)
+		throw(error_instructionSize);
+	if( !checkRegister(registerName))
+		throw(error_register);
+
 	int dataInt;
 	if (registerName == 'M')
 		dataInt = dataStringToInt(R.registerName('A')) - dataStringToInt(R.getM());
 	else
 		dataInt = dataStringToInt(R.registerName('A')) - dataStringToInt(R.registerName(registerName));
-	if(instruction == "SBB"){
+	if(line[1]=='B'){	//line[1]='B' in SBB instruction only
 		dataInt -=R.flagName('C');
 	}
 	int borrow;
 	if(dataInt < 0){
-		dataInt = -dataInt;
+		dataInt = 0x100 + dataInt;	//since data is -ve, hex(100) - data is the required data
 		borrow = 1;
 	}
 	else
@@ -151,31 +152,31 @@ void SUB_SBB(string& line, registers& R, string instruction, int lineNumber){
 	R.registerSet('A',dataString);
 }
 
-void SUI_SBI(string& line, registers& R, string instruction, int lineNumber){
+void SUI_SBI(string& line, registers& R){
 	string dataString;
 	char dataChar = line[4];
-	if(!checkData(dataChar)){
-		cout<<"invalid data in line :"<<lineNumber<<endl;
-		return;
-	}
+	if(line.length() < 7)
+		throw(error_instructionSize);
+
+	if(!checkData(dataChar))
+		throw(error_data);
+
 	dataString.push_back(dataChar);
 	dataChar = line[5];
-	if(!checkData(dataChar)){
-		cout<<"invalid data in line :"<<lineNumber<<endl;
-		return;
-	}
+	if(!checkData(dataChar))
+		throw(error_data);
+
 	dataString.push_back(dataChar);
-	if(line[6] != 'H'){
-		cout<<"data must end with 'H' in line :"<<lineNumber<<endl;
-		return;
-	}
+	if(line[6] != 'H')
+		throw(error_H);
+
 	int dataInt = dataStringToInt(R.registerName('A')) - dataStringToInt(dataString);
-	if(instruction == "SBI"){
+	if(line[1]=='B'){ 	//line[1]='B' in SBI only
 		dataInt -=R.flagName('C');
 	}
 	int borrow;
 	if(dataInt < 0){
-		dataInt = -dataInt;
+		dataInt = 0x100 + dataInt;	//since data is -ve, hex(100) - data is the required data
 		borrow = 1;
 	}
 	else
@@ -210,20 +211,19 @@ void SUI_SBI(string& line, registers& R, string instruction, int lineNumber){
 	R.registerSet('A',dataString);
 }
 
-void INR(string& line, registers& R, int lineNumber){
+void INR(string& line, registers& R){
 	char registerName = line[4];
-	if(!checkRegister(registerName)){
-		cout<<"No such register in line :"<<lineNumber<<endl;
-		return;
-	}
+	if(line.length() < 5)
+		throw(error_instructionSize);
+	if(!checkRegister(registerName))
+		throw(error_register);
+
 	int dataInt;
 	if(registerName == 'M')
-		dataInt = dataStringToInt(R.getM()) + 1;
+		dataInt = (dataStringToInt(R.getM()) + 1) % 0x100;	//highest increase can be ff only
 	else
-	dataInt = dataStringToInt(R.registerName(registerName)) + 1;
-	if(dataInt > 255){
-		dataInt &= 255;
-	}
+	dataInt = (dataStringToInt(R.registerName(registerName)) + 1) % 0x100;//hex(1000) is 1 0000 0000 so the range is 00 to ff
+
 	string dataString = dataIntToString(dataInt);
 	if (registerName == 'M')
 		R.setM(dataString);
@@ -231,19 +231,20 @@ void INR(string& line, registers& R, int lineNumber){
 		R.registerSet(registerName, dataString);
 }
 
-void DCR(string& line, registers& R, int lineNumber){
+void DCR(string& line, registers& R){
 	char registerName = line[4];
-	if(!checkRegister(registerName)){
-		cout<<"No such register in line :"<<lineNumber<<endl;
-		return;
-	}
+	if(line.length() < 5)
+		throw(error_instructionSize);
+	if(!checkRegister(registerName))
+		throw(error_register);
+
 	int dataInt;
 	if(registerName == 'M')
 		dataInt = dataStringToInt(R.getM()) - 1;
 	else
 		dataInt = dataStringToInt(R.registerName(registerName)) - 1;
 	if(dataInt < 0){
-		dataInt = 255;
+		dataInt = 0xff;
 	}
 	string dataString = dataIntToString(dataInt);
 	if (registerName == 'M')
@@ -252,7 +253,9 @@ void DCR(string& line, registers& R, int lineNumber){
 		R.registerSet(registerName, dataString);
 }
 
-void INX_DCX(string& line, registers& R, int lineNumber){
+void INX_DCX(string& line, registers& R){
+	if(line.length() < 5)
+		throw(error_instructionSize);
 	if(line[4] == 'B' || line[4] == 'D' || line[4] == 'H'){
 		string address;
 		if(line[4] == 'H'){
@@ -265,17 +268,13 @@ void INX_DCX(string& line, registers& R, int lineNumber){
 		}
 		int addressInt = addressStringToInt(address);
 		if(line[0] == 'I'){
-			if((addressInt + 1) > 65535){
-				cout<<"Exceed memory ffff\n";
-				return;
-			}
+			if((addressInt + 1) > 0xffff)
+				throw(error_memoryExceed);
 			addressInt++;
 		}
 		else{
-			if((addressInt - 1) < 0){
-				cout<<"Exceed memory 0000\n";
-				return;
-			}
+			if((addressInt - 1) < 0)
+				throw(error_memoryExceed);
 			addressInt--;
 		}
 		address = addressIntToString(addressInt);
@@ -294,9 +293,8 @@ void INX_DCX(string& line, registers& R, int lineNumber){
 			R.registerSet(char (line[4]+1), lowerAdderss);
 		}
 	}
-	else{
-		cout<<"No such resister pairin line :"<<lineNumber;
-	}
+	else
+		throw(error_registerPair);
 }
 
 void DAA(registers& R){
@@ -343,11 +341,9 @@ void DAA(registers& R){
 		R.flagReset('P');
 }
 
-void DAD(string& line, registers& R, int lineNumber){
-	if(line.length() < 5){
-		cout<<"No register in line: "<< lineNumber <<endl;
-		return;
-	}
+void DAD(string& line, registers& R){
+	if(line.length() < 5)
+		throw(error_instructionSize);
 	if( line[4] == 'B'|| line[4] == 'D'|| line[4] == 'H'){	//line[4] is register pair name
 		int data16_1 = (dataStringToInt(R.registerName('H')) << 8) + dataStringToInt(R.registerName('L'));
 							// shifting << 8 gives XXXX XXXX 0000 0000
@@ -374,5 +370,5 @@ void DAD(string& line, registers& R, int lineNumber){
 		R.registerSet('L', dataStrLower);
 	}
 	else
-		cout<<"No such register pair in line: "<< lineNumber << endl;
+		throw(error_registerPair);
 }

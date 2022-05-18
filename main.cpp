@@ -56,23 +56,23 @@ int instructionDecode(string &line, registers &R, mappingLabel& M, int lineNumbe
 		return JMP_JNC_JNZ_JPE_JPO(line, R, M, instruction, lineNumber);
 	/*Arithmetic Instruction*/
 	else if(instruction == "ADD" || instruction == "ADC")
-		ADD_ADC(line, R, instruction, lineNumber);
+		ADD_ADC(line, R);
 	else if(instruction == "ADI" || instruction == "ACI")
-		ADI_ACI(line, R, instruction, lineNumber);
+		ADI_ACI(line, R);
 	else if(instruction == "SUB" || instruction == "SBB")
-		SUB_SBB(line, R, instruction, lineNumber);
+		SUB_SBB(line, R);
 	else if(instruction == "SUI" || instruction == "SBI")
-		SUI_SBI(line, R, instruction, lineNumber);
+		SUI_SBI(line, R);
 	else if(instruction == "INR")
-		INR(line, R, lineNumber);
+		INR(line, R);
 	else if(instruction == "DCR")
-		DCR(line, R, lineNumber);
+		DCR(line, R);
 	else if(instruction == "INX" || instruction == "DCX")
-		INX_DCX(line, R, lineNumber);
+		INX_DCX(line, R);
 	else if(instruction == "DAA")
 		DAA(R);
 	else if(instruction == "DAD")
-		DAD(line, R, lineNumber);
+		DAD(line, R);
 	/*Logical Instructions*/
 	else if(instruction =="CMP")
 		CMP(line, R, lineNumber);

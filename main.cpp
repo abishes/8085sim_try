@@ -155,6 +155,7 @@ int instructionDecode(string &line, registers &R, mappingLabel& M, int lineNumbe
 
 int main(int argc, char* argv[]){
 	openMemory();
+	setMemory();
 	registers R;
 	vector<string> code;
 	mappingLabel M;
@@ -194,5 +195,13 @@ int main(int argc, char* argv[]){
 	R.registerDisplay();
 	cout<<"\n";
 	R.flagDisplay();
-	cin.get();
+	cout << "\n";
+	while (1){
+		char choice;
+		cout << "Do you want to see memory[y/n]: ";
+		cin >> choice;
+		if(choice == 'n' || choice == 'N')
+		return 0;
+		seeMemory();
+	}
 }

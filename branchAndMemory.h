@@ -14,6 +14,8 @@ using namespace std;
 void openMemory();
 string readMemory(int);
 void writeMemory(int, int);
+void setMemory();
+void seeMemory();
 
 //for branching instruction
 class mappingLabel{

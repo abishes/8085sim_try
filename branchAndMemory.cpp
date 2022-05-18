@@ -53,6 +53,74 @@ void writeMemory(int address, int data){
 	file.close();
 }
 
+void setMemory(){
+	char choice;
+	while (1){
+		cout << "Do you want to set memory [y/n]: ";
+		cin >> choice;
+		if(choice == 'y'|| choice == 'Y' || choice == 'n' || choice == 'N')
+			break;
+	}
+	if(choice == 'n' || choice == 'N')
+		return;
+	string startingAddressStr;
+	string data;
+	int startingAddress;
+	int no_OfAddress;
+	while(1){
+		cout << "Enter starting address (4-byte): ";
+		cin >> startingAddressStr;
+		if(checkAddress(startingAddressStr))
+			break;
+	}
+	startingAddress = addressStringToInt(startingAddressStr);
+	cout << "Enter no. of address to change: ";
+	cin >> no_OfAddress;
+	cout << "Enter data\n";
+	for(int i = 0; i < no_OfAddress && startingAddress < 0xffff; i++){
+		cout << addressIntToString(startingAddress) << ">> ";
+		cin >> data;
+		if(!check2BitData(data)){
+			cout << " Enter again ";
+			i--;
+			startingAddress--;
+		}
+		else
+			writeMemory(startingAddress, dataStringToInt(data));
+		startingAddress++;
+	}
+}
+
+void seeMemory(){
+	char choice;
+	while(1){
+		cout << "Single or multiple [s/m]: ";
+		cin >> choice;
+		if(choice == 's' || choice == 'S' || choice == 'm' || choice == 'M')
+			break;
+	}
+	string startingAddressStr;
+	int startingAddress;
+	while(1){
+		cout << "Address (4-byte): ";
+		cin >> startingAddressStr;
+		if(checkAddress(startingAddressStr))
+			break;
+	}
+	startingAddress = addressStringToInt(startingAddressStr);
+	if(choice == 'm' || choice == 'M'){
+		int no_OfAddress;
+		cout << "Enter no. of address to see: ";
+		cin >> no_OfAddress;
+		for(int i = 0; i < no_OfAddress && startingAddress < 0xffff; i++){
+			cout << addressIntToString(startingAddress + i) << ">> ";
+			cout << readMemory(startingAddress + i) << endl;
+		}
+		return;
+	}
+	cout << readMemory(startingAddress) << endl;
+}
+
 void codeFromFile(const char* fileName, vector<string>& code, mappingLabel& M, int& lineNumber){
 	ifstream file(fileName);
 	string line;

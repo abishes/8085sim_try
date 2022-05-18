@@ -62,9 +62,28 @@ ADD B						✔✔
 HLT
 STOP
 
-8-> You can directly edit data.txt file for instructions that concern with read/write
+8->You can directly edit data.txt file for instructions that concern with read/write
 operation with memory like STA, LXI, LDA, STAX etc.
 
 MVI A 20H
 STA 0001H
 Go to (0001)th position of file to see the result from the instruction.
+
+9->To execuite instruction from file.
+	./8085 file_name
+	OR
+	.\8085.exe file_name
+
+10->To change data of desired location
+	Do you want to set memory [y/n]: y (OR Y)
+	Enter starting address (4-byte): 4-byte_address
+	Enter no. of address to change: 2-byte_data
+11->To see data:
+	Do you want to see memory[y/n]: y (OR Y)
+	Single or multiple [s/m]: (s or m)
+	Address (4-byte): 4-byte_address
+	if single
+		4-byte_address>> 2-byte_data
+	else
+		Enter no. of address to see: n
+		Displays address upto n-1

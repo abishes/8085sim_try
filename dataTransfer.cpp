@@ -3,29 +3,21 @@
 void MVI(string &line, registers &R)
 {
 	char registerNname = line[4];
-	if(line.length() < 9){
+	if(line.length() < 9)
 		throw(error_instructionSize);
-		return;
-	}
-	if (!checkRegister(registerNname)){
+
+	if (!checkRegister(registerNname))
 		throw(error_register);
-		return;
-	}
 
-	if (line[5] != SPACE){
+	if (line[5] != SPACE)
 		throw(error_space);
-		return;
-	}
 
-	if (!(checkData(line[6]) && checkData(line[7]))){
+	if (!(checkData(line[6]) && checkData(line[7])))
 		throw(error_data);
-		return;
-	}
 
-	if (line[8] != 'H'){
+	if (line[8] != 'H')
 		throw(error_H);
-		return;
-	}
+
 	string dataString;
 	dataString.push_back(line[6]);
 	dataString.push_back(line[7]);
@@ -42,23 +34,19 @@ void MVI(string &line, registers &R)
 void MOV(string &line, registers &R)
 {
 	char register1 = line[4];
-	if(line.length() < 7){
+	if(line.length() < 7)
 		throw(error_instructionSize);
-		return;
-	}
-	if (line[5] != SPACE){
+
+	if (line[5] != SPACE)
 		throw(error_space);
-		return;
-	}
+
 	char register2 = line[6];
-	if (!(checkRegister(register1) && checkRegister(register2))){
+	if (!(checkRegister(register1) && checkRegister(register2)))
 		throw(error_register);
-		return;
-	}
-	if(register1 == 'M'){
+
+	if(register1 == 'M')
 		throw(error_H);
-		return;
-	}
+
 	if( register2 == 'M'){
 		R.registerSet(register1, R.getM());
 		return;
@@ -69,27 +57,21 @@ void MOV(string &line, registers &R)
 
 void LDA_STA(string &line, registers &R){
 	string address;
-	if(line.length() < 9){
+	if(line.length() < 9)
 		throw(error_instructionSize);
-		return;
-	}
+
 	if (line[8] != 'H')
-	{
 		throw(error_H);
-		return;
-	}
+
 	for(int i =0; line[i+4] !='H';i++){
-		if(!checkData(line[i+4])){
+		if(!checkData(line[i+4]))
 			throw(error_data);
-			return;
-		}
 		address.push_back(line[i+4]);
 	}
 	if(line[0] == 'L')
-	R.registerSet('A', readMemory(addressStringToInt(address)));
-	else{
+		R.registerSet('A', readMemory(addressStringToInt(address)));
+	else
 		writeMemory(addressStringToInt(address),dataStringToInt(R.registerName('A')));
-	}
 	//OR
 	// int addressInt = addressStringToInt(address);
 	// string data = readMemory(addressStringToInt(address));
@@ -99,24 +81,19 @@ void LDA_STA(string &line, registers &R){
 void LXI(string& line, registers& R){
 	string Haddress;	//higher order address
 	string Laddress;	//lower order address
-	if(line.length() < 11){
+	if(line.length() < 11)
 		throw(error_instructionSize);
-		return;
-	}
-	if(line[5] != ' '){
+
+	if(line[5] != ' ')
 		throw(error_space);
-		return;
-	}
+
 	if(line[4] == 'B' || line[4] == 'D' || line[4] == 'H'){
-		if(line[10] != 'H'){
+		if(line[10] != 'H')
 			throw(error_H);
-			return;
-		}
 		for(int i =0; line[i+8] !='H';i++){
-			if(!checkData(line[i+6]) || !checkData(line[i+8])){
+			if(!checkData(line[i+6]) || !checkData(line[i+8]))
 				throw(error_data);
-				return;
-			}
+
 			Haddress.push_back(line[i+6]);
 			Laddress.push_back(line[i+8]);
 		}
@@ -129,17 +106,15 @@ void LXI(string& line, registers& R){
 			R.registerSet(char (line[4] + 1), Laddress);
 		}
 	}
-	else{
+	else
 		throw(error_registerPair);
-		return;
-	}
+
 }
 
 void LDAX_STAX(string& line, registers& R, int lineNumber){
-	if(line.length()< 6){
+	if(line.length()< 6)
 		throw(error_instructionSize);
-		return;
-	}
+
 	if(line[5] == 'B' || line[5] == 'D'){
 		string lineToLDA = "LDA ";
 		string lineToSTA = "STA ";
@@ -163,53 +138,43 @@ void LDAX_STAX(string& line, registers& R, int lineNumber){
 
 void LHLD(string& line, registers& R){
 	string address;
-	if(line.length() < 10){
+	if(line.length() < 10)
 		throw(error_instructionSize);
-		return;
-	}
+
 	if (line[9] != 'H')
-	{
 		throw(error_H);
-		return;
-	}
+
 	for(int i =0; line[i+5] !='H';i++){
-		if(!checkData(line[i+5])){
+		if(!checkData(line[i+5]))
 			throw(error_data);
-			return;
-		}
+
 		address.push_back(line[i+5]);
 	}
 	R.registerSet('L', readMemory(addressStringToInt(address)));
-	if((addressStringToInt(address) + 1) > 0xffff){
+	if((addressStringToInt(address) + 1) > 0xffff)
 		throw(error_memoryExceed);
-		return;
-	}
+
 	R.registerSet('H', readMemory(addressStringToInt(address) + 1));
 }
 
 void SHLD(string& line, registers& R){
 	string address;
-	if(line.length() < 10){
+	if(line.length() < 10)
 		throw(error_instructionSize);
-		return;
-	}
+
 	if (line[9] != 'H')
-	{
 		throw(error_H);
-		return;
-	}
+
 	for(int i =0; line[i+5] !='H';i++){
-		if(!checkData(line[i+5])){
+		if(!checkData(line[i+5]))
 			throw(error_data);
-			return;
-		}
+
 		address.push_back(line[i+5]);
 	}
 	writeMemory(addressStringToInt(address), dataStringToInt(R.registerName('L')));
-	if(addressStringToInt(address) > 0xffff){
+	if(addressStringToInt(address) > 0xffff)
 		throw(error_memoryExceed);
-		return;
-	}
+
 	writeMemory((addressStringToInt(address) + 1),dataStringToInt(R.registerName('H')));
 }
 

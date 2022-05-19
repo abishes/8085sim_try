@@ -8,6 +8,4 @@ main.o: main.cpp
 %.o: %.cpp %.h
 	$(CCC) -c $<
 
-.PHONY: test
-test:
-	sh -c './8085sim < test'
+

@@ -8,4 +8,8 @@ main.o: main.cpp
 %.o: %.cpp %.h
 	$(CCC) -c $<
 
+.PHONY: clean
+
+clean:
+	rm.exe $(OBJ)
 

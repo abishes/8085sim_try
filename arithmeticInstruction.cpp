@@ -251,6 +251,10 @@ void DCR(string& line, registers& R){
 		R.setM(dataString);
 	else
 		R.registerSet(registerName, dataString);
+	if(dataInt == 0)
+		R.flagSet('Z');
+	else
+		R.flagReset('Z');
 }
 
 void INX_DCX(string& line, registers& R){

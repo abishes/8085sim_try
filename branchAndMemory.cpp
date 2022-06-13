@@ -142,7 +142,7 @@ void labelPush(string line,int lineNumber, mappingLabel& M){
 			break;
 		labelName.push_back(line[i]);
 	}
-	M.putLabel(labelName, lineNumber);
+	M.putLabel(labelName, lineNumber-1);
 }
 
 void mappingLabel::putLabel(string labelName,int lineNumber){

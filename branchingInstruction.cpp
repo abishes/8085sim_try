@@ -3,6 +3,7 @@ int JC_JP_JM_JZ(string& line, registers& R, mappingLabel& M, string instruction,
 	//checking flags in these if else conditions.If criteria is not met then next line is to be executed. So, control is
 	//sent through return.
 	if(instruction == "JC"){	//for JC instruction
+		cout<<"Carry status"<< R.flagName('C')<<endl;
 		if(!R.flagName('C'))
 			return (lineNumber - 1);	//since this function is called by lvalue i in main, and i is index starting with 0 
 	}						//in main so, decreasing lineNumber by 1 gives i its original index.
@@ -25,7 +26,9 @@ int JC_JP_JM_JZ(string& line, registers& R, mappingLabel& M, string instruction,
 			break;
 		label.push_back(line[i]);
 	}
+	cout<<"label name: "<<label;
 	whereIsLabel = M.getLabel(label);	//returns the position where the label name is decleared
+	cout<<"label num: "<<whereIsLabel;
 	if(whereIsLabel == 0)
 		throw(error_label);
 	return (whereIsLabel - 2);	//since whereIsLabel is 1 unit more than index, decreasing it by 2 gives 'i'(in main) the value 1 less
@@ -39,15 +42,15 @@ int JMP_JNC_JNZ_JPE_JPO(string& line, registers& R, mappingLabel& M, string inst
 		if(R.flagName('C'))
 			return (lineNumber - 1);
 	}
-	else if(instruction == "JNZ"){	//for JNZ instruction
+	if(instruction == "JNZ"){	//for JNZ instruction
 		if(R.flagName('Z'))
 			return (lineNumber - 1);
 	}
-	else if(instruction == "JPE"){	//for JPE instruction
+	if(instruction == "JPE"){	//for JPE instruction
 		if(!R.flagName('P'))
 			return (lineNumber - 1);
 	}
-	else if(instruction == "JPO"){	//for JPO instruction
+	if(instruction == "JPO"){	//for JPO instruction
 		if(!R.flagName('P'))
 			return (lineNumber - 1);
 	}

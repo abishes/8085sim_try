@@ -28,6 +28,7 @@ bool parityChecker(int);
 
 bool signChecker(int);
 bool auxiliaryCarryChecker(string, string, string);
+void codeTransfer(string& line);
 
 
 #endif

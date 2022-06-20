@@ -1,12 +1,10 @@
 #include "dataComparision.h"
 
 int charToInt(char X){  /*Converts character to equivalent integer i.e hexadecimal to decimal*/
-	if((int)X >= 48 && (int)X <= 57){   /* ascii code of 0 is 48 and 9 is 57*/
+	if((int)X >= 48 && (int)X <= 57)  /* ascii code of 0 is 48 and 9 is 57*/
 		return ((int)X)-48;
-	}
-	if((int)X >= 65 && (int)X <= 70){   /*ascii code of 'A' is 65 and 'F' is 70*/
+	if((int)X >= 65 && (int)X <= 70)   /*ascii code of 'A' is 65 and 'F' is 70*/
 		return ((int)X)-55;
-	}
 	return 0;
 }
 
@@ -119,4 +117,26 @@ bool auxiliaryCarryChecker(string data1, string data2, string operation){
 	}
 	else
 		return 0;
+}
+
+void codeTransfer(string& line){
+	string temp;
+	bool checkBetween = false;	//to check multiple white spaces in between code
+	bool checkFront = true;	//to check multiple white spaces in between code
+	for(char& a : line){
+		if(checkFront && (a ==' ' || a =='\t'))
+			continue;
+		if(checkBetween==0 && (a == ' ' || a == '\t')){
+			temp += ' ';
+			checkBetween = true;
+		}
+		else if(checkBetween == 1 && (a == ' ' || a == '\t'))
+			continue;
+		else{
+			temp += toupper(a);
+			checkBetween = false;
+			checkFront = false;
+		}
+	}
+	line = temp;
 }

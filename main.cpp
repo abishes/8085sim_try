@@ -153,6 +153,8 @@ int instructionDecode(string &line, registers &R, mappingLabel& M, int lineNumbe
 	}
 }
 
+
+
 int main(int argc, char* argv[]){
 	openMemory();
 	setMemory();
@@ -162,16 +164,18 @@ int main(int argc, char* argv[]){
 	string line;
 	int lineNumber = 1;
 	if(argc == 1){
-		cout<<"After the code is written write \"STOP\" to indicate the code is all done.\n";
-		cout<<"Write your code\n";
-		cout<<"--------------------------------------------------------------------------\n";
+		cout<<"After the code complition enter \"EXIT/exit\", to exit code mode and to execute.\n";
+		cout<<"---------------------------Write your code---------------------------------\n";
+		cout<<"---------------------------------------------------------------------------\n";
 		while(lineNumber){
 			getline(cin, line);
-			if(line == "STOP"){
+			if(line == "EXIT" || line == "exit"){
 				break;
 			}
-			if(line[0] != '\0')
+			if(line[0] != '\0'){
+				codeTransfer(line);
 				code.push_back(line);
+			}
 			if(line.find(':') != string::npos){
 				labelPush(line, lineNumber, M);
 			}

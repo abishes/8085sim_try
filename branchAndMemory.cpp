@@ -126,12 +126,14 @@ void codeFromFile(const char* fileName, vector<string>& code, mappingLabel& M, i
 	string line;
 	while(getline(file, line)){
 		cout << line << endl;
-		if(line[0] != '\0')
-			code.push_back(line);
-		if(line.find(':') != string::npos){
-			labelPush(line, lineNumber, M);
-		}
-		lineNumber++;
+		if(line[0] != '\0'){
+				codeTransfer(line);
+				code.push_back(line);
+			}
+			if(line.find(':') != string::npos){
+				labelPush(line, lineNumber, M);
+			}
+			lineNumber++;
 	}
 }
 //for labels

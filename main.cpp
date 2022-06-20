@@ -125,9 +125,6 @@ int instructionDecode(string &line, registers &R, mappingLabel& M, int lineNumbe
 		case error_register:
 		cout << "No such register in line: " << lineNumber << endl;
 		break;
-		case error_space:
-		cout << "Single space needed in line: " << lineNumber << endl;
-		break;
 		case error_H:
 		cout << "Data must end with 'H' in line: " << lineNumber << endl;
 		break;
@@ -153,8 +150,6 @@ int instructionDecode(string &line, registers &R, mappingLabel& M, int lineNumbe
 	}
 }
 
-
-
 int main(int argc, char* argv[]){
 	openMemory();
 	setMemory();
@@ -165,8 +160,8 @@ int main(int argc, char* argv[]){
 	int lineNumber = 1;
 	if(argc == 1){
 		cout<<"After the code complition enter \"EXIT/exit\", to exit code mode and to execute.\n";
-		cout<<"---------------------------Write your code---------------------------------\n";
-		cout<<"---------------------------------------------------------------------------\n";
+		cout<<"------------------------------Write your code---------------------------------\n";
+		cout<<"------------------------------------------------------------------------------\n";
 		while(lineNumber){
 			getline(cin, line);
 			if(line == "EXIT" || line == "exit"){
@@ -183,9 +178,8 @@ int main(int argc, char* argv[]){
 		}
 	}
 	else{
-		cout << "Reading from file...\n";
-		cout << "...\n";
-		cout << "...\n";
+		cout<<"----------------------------Reading from file---------------------------------\n";
+		cout<<"------------------------------------------------------------------------------\n";
 		codeFromFile(argv[1], code, M, lineNumber);
 	}
 	cout<<"------------------------------------------------------\n";

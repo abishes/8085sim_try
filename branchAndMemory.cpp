@@ -123,16 +123,20 @@ void seeMemory(){
 
 void codeFromFile(const char* fileName, vector<string>& code, mappingLabel& M, int& lineNumber){
 	ifstream file(fileName);
+	if(!file.is_open()){
+		cout<<"No Such file exist\n";
+		return;
+	}
 	string line;
 	while(getline(file, line)){
-		cout << line << endl;
 		if(line[0] != '\0'){
-				codeTransfer(line);
-				code.push_back(line);
-			}
-			if(line.find(':') != string::npos){
-				labelPush(line, lineNumber, M);
-			}
+			codeTransfer(line);
+			code.push_back(line);
+		}
+		if(line.find(':') != string::npos){
+			labelPush(line, lineNumber, M);
+		}
+		cout << line << endl;
 			lineNumber++;
 	}
 }

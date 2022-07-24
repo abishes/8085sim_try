@@ -9,9 +9,6 @@ void MVI(string &line, registers &R)
 	if (!checkRegister(registerNname))
 		throw(error_register);
 
-	if (line[5] != SPACE)
-		throw(error_space);
-
 	if (!(checkData(line[6]) && checkData(line[7])))
 		throw(error_data);
 
@@ -36,9 +33,6 @@ void MOV(string &line, registers &R)
 	char register1 = line[4];
 	if(line.length() < 7)
 		throw(error_instructionSize);
-
-	if (line[5] != SPACE)
-		throw(error_space);
 
 	char register2 = line[6];
 	if (!(checkRegister(register1) && checkRegister(register2)))
@@ -83,9 +77,6 @@ void LXI(string& line, registers& R){
 	string Laddress;	//lower order address
 	if(line.length() < 11)
 		throw(error_instructionSize);
-
-	if(line[5] != ' ')
-		throw(error_space);
 
 	if(line[4] == 'B' || line[4] == 'D' || line[4] == 'H'){
 		if(line[10] != 'H')

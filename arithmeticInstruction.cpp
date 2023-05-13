@@ -301,7 +301,7 @@ void INX_DCX(string& line, registers& R){
 		throw(error_registerPair);
 }
 
-void DAA(registers& R){
+void DAA(string& line,registers& R){
 	string dataString = R.registerName('A');
 	int carry = 0;
 	int HigherData = charToInt(dataString[0]);

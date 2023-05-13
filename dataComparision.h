@@ -1,7 +1,6 @@
 #include <string>
 #ifndef dataComparision
 #define dataComparision
-#define SPACE 32
 using namespace std;
 
 const int error_data =  0;
@@ -12,6 +11,7 @@ const int error_flag= 4;
 const int error_registerPair=5;
 const int error_memoryExceed= 6;
 const int error_label=7;
+const int error_instruction=8;
 
 int charToInt(char);
 char intToChar(int);

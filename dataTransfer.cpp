@@ -102,7 +102,7 @@ void LXI(string& line, registers& R){
 
 }
 
-void LDAX_STAX(string& line, registers& R, int lineNumber){
+void LDAX_STAX(string& line, registers& R){
 	if(line.length()< 6)
 		throw(error_instructionSize);
 
@@ -123,7 +123,7 @@ void LDAX_STAX(string& line, registers& R, int lineNumber){
 		}
 	}
 	else{
-		cout<<"Invalid register pair(B/D) in line: "<<lineNumber<<endl;
+		cout<<"Invalid register pair(B/D) in line: "<<endl;
 	}
 }
 
@@ -169,7 +169,7 @@ void SHLD(string& line, registers& R){
 	writeMemory((addressStringToInt(address) + 1),dataStringToInt(R.registerName('H')));
 }
 
-void XCHG(registers& R){
+void XCHG(string& line, registers& R){
 	string temp = R.registerName('H');
 	R.registerSet('H', R.registerName('D'));
 	R.registerSet('D', temp);

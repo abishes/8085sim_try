@@ -140,7 +140,7 @@ void ANI_ORI_XRI(string& line, registers& R){
 	R.registerSet('A',dataString);
 }
 
-void RLC(registers& R){
+void RLC(string& line, registers& R){
 	string dataString = R.registerName('A');
 	int dataInt=dataStringToInt(dataString);
 	int carry= (dataInt & 128) >> 7;    /*to find if MSB is 0 or 1*/
@@ -155,7 +155,7 @@ void RLC(registers& R){
 	return;
 }
 
-void RRC(registers& R){
+void RRC(string& line, registers& R){
 	string dataString = R.registerName('A');
 	int dataInt = dataStringToInt(dataString);
 	int carry = dataInt & 1;
@@ -169,7 +169,7 @@ void RRC(registers& R){
 	R.registerSet('A', dataString);
 }
 
-void RAL(registers& R){
+void RAL(string& line, registers& R){
 	int carryFlag = R.flagName('C');
 	string dataString = R.registerName('A');
 	int dataInt=dataStringToInt(dataString);
@@ -185,7 +185,7 @@ void RAL(registers& R){
 	return;
 }
 
-void RAR(registers& R){
+void RAR(string& line, registers& R){
 	int carryFlag =R.flagName('C');
 	string dataString = R.registerName('A');
 	int dataInt = dataStringToInt(dataString);
@@ -200,7 +200,7 @@ void RAR(registers& R){
 	R.registerSet('A', dataString);
 }
 
-void CMA(registers& R){ /*complement Accmulator instruction*/
+void CMA(string& line, registers& R){ /*complement Accmulator instruction*/
 	string dataString = R.registerName('A');
 	int dataInt = dataStringToInt(dataString);
 	dataInt = ~dataInt;
@@ -208,7 +208,7 @@ void CMA(registers& R){ /*complement Accmulator instruction*/
 	R.registerSet('A', dataString);
 }
 
-void CMC(registers& R){ /*complement carry flag instruction*/
+void CMC(string& line, registers& R){ /*complement carry flag instruction*/
 	int carryFlag = R.flagName('C');
 	if(carryFlag)
 		R.flagReset('C');
@@ -216,6 +216,6 @@ void CMC(registers& R){ /*complement carry flag instruction*/
 		R.flagSet('C');
 }
 
-void STC(registers& R){ /*set carry flag instruction*/
+void STC(string& line, registers& R){ /*set carry flag instruction*/
 	R.flagSet('C');
 }

@@ -9,6 +9,25 @@
 #include "branchAndMemory.h"
 #include "branchingInstruction.h"
 
+string errors_container[9]={"No such data in line: ", "No such register in line: ", "Data must end with 'H' in line: ",
+		"Missing full instruction in line: ", "No such flag in line: ", "No such register pair in line: ",
+		"Memory exceed from instruction in line: ", "No such label in line: ", "No such instruction in line : "};
+
+int (*exec1[2])(string&, registers&, mappingLabel&, string, int)={JC_JP_JM_JZ, JMP_JNC_JNZ_JPE_JPO };
+map<string, int> instructionTofunction={
+										{"MVI",0},{"MOV",1},{"LDA",2},{"STA",2},{"LXI",3},{"LDAX",4},{"STAX",4},{"LHLD",5},{"SHLD",6},{"XCHG",7},
+
+										{"ADD",8},{"ADC",8},{"ADI",9},{"ACI",9},{"SUB",10},{"SBB",10},{"SUI",11},{"SBI",11},{"INR",12},{"DCR",13},{"INX",14},{"DCX", 14},{"DAA",15},{"DAD",16},
+											
+										{"CMP",17},{"CPI",18},{"ANA",19},{"ORA",19},{"XRA",19},{"ANI",20},{"ORI",20},{"XRI",20},{"RLC",21},{"RRC",22},{"RAL",23},{"RAR",24},{"CMA",25},{"CMC",26},{"STC",27}
+										};
+
+void (*exec2[28])(string&, registers&)={
+										MVI, MOV, LDA_STA, LXI, LDAX_STAX, LHLD, SHLD, XCHG,/*Data transfer instructions*/
+										ADD_ADC, ADI_ACI, SUB_SBB, SUI_SBI,INR, DCR, INX_DCX, DAA, DAD, /*Arithmetic Instructions*/
+										CMP, CPI, ANA_ORA_XRA, ANI_ORI_XRI, RLC, RRC, RAL, RAR, CMA, CMC, STC/*Logical Instructions*/
+										};
+
 int instructionDecode(string &line, registers &R, mappingLabel& M, int lineNumber){
 	try{
 	if(line.find(':') != string::npos){
@@ -26,127 +45,33 @@ int instructionDecode(string &line, registers &R, mappingLabel& M, int lineNumbe
 	string instruction;
 	for (int i = 0; i < 5; i++) /*To identify instruction name*/
 	{
-		if (line[i] == SPACE || line[i] == '\0'){
+		if (line[i] == ' ' || line[i] == '\0'){
 			break;
 		}
 		instruction.push_back(line[i]);
 	}
-	/*Data transfer instructions*/
-	if (instruction == "MVI")
-		MVI(line, R);
-	else if(instruction == "MOV")
-		MOV(line, R);
-	else if(instruction == "LDA" || instruction == "STA")
-		LDA_STA(line, R);
-	else if(instruction == "LXI")
-		LXI(line, R);
-	else if(instruction == "LDAX" || instruction == "STAX")
-		LDAX_STAX(line, R, lineNumber);
-	else if(instruction == "LHLD")
-		LHLD(line, R);
-	else if(instruction == "SHLD")
-		SHLD(line, R);
-	else if(instruction == "XCHG")
-		XCHG(R);	
-	/*Branching instruction*/
-	else if(instruction == "JC" || instruction == "JP" ||  instruction == "JM" || instruction == "JZ")
-		return JC_JP_JM_JZ(line, R, M, instruction, lineNumber);	//branching instruction have return because they represents
-																	//where to go
-	else if(instruction == "JMP" || instruction == "JNC" ||instruction == "JNZ" ||instruction == "JPE" ||instruction == "JPO" )
-		return JMP_JNC_JNZ_JPE_JPO(line, R, M, instruction, lineNumber);
-	/*Arithmetic Instruction*/
-	else if(instruction == "ADD" || instruction == "ADC")
-		ADD_ADC(line, R);
-	else if(instruction == "ADI" || instruction == "ACI")
-		ADI_ACI(line, R);
-	else if(instruction == "SUB" || instruction == "SBB")
-		SUB_SBB(line, R);
-	else if(instruction == "SUI" || instruction == "SBI")
-		SUI_SBI(line, R);
-	else if(instruction == "INR")
-		INR(line, R);
-	else if(instruction == "DCR")
-		DCR(line, R);
-	else if(instruction == "INX" || instruction == "DCX")
-		INX_DCX(line, R);
-	else if(instruction == "DAA")
-		DAA(R);
-	else if(instruction == "DAD")
-		DAD(line, R);
-	/*Logical Instructions*/
-	else if(instruction =="CMP")
-		CMP(line, R);
-
-	else if(instruction == "CPI")
-		CPI(line, R);
-
-	else if(instruction == "ANA" || instruction == "ORA" || instruction == "XRA" )
-		ANA_ORA_XRA(line, R);
-
-	else if(instruction == "ANI" ||instruction == "ORI" || instruction == "XRI" )
-		ANI_ORI_XRI(line, R);
-
-	else if(instruction == "RLC")
-		RLC(R);
-
-	else if(instruction == "RRC")
-		RRC(R);
-
-	else if(instruction == "RAL")
-		RAL(R);
-
-	else if(instruction == "RAR")
-		RAR(R);
-
-	else if(instruction == "CMA")
-		CMA(R);
-
-	else if(instruction == "CMC")
-		CMC(R);
-
-	else if(instruction == "STC")
-		STC(R);
-	else if(instruction == "HLT")
+	if(instructionTofunction.find(instruction) != instructionTofunction.end()){
+			exec2[instructionTofunction[instruction]](line, R);
+		}
+	if(instruction == "HLT")
 		return -10;
-	else if(instruction == "NOP")
-	  return (lineNumber -1);
-	else
-		cout<<"No such instruction in line :"<<lineNumber<<endl;
-
+	if(instruction == "NOP")
+		return (lineNumber -1);	
+	/*Branching instruction*/
+	if (instruction == "JC" || instruction == "JP" ||instruction == "JM" ||instruction == "JZ" ||
+		instruction == "JMP" ||instruction == "JNC" ||instruction == "JNZ" ||instruction == "JPE" ||instruction == "JPO")
+		return exec1[instruction.size()-2](line, R, M, instruction, lineNumber);
+	else{
+		throw(error_instruction);
+	}
 	return (lineNumber - 1);	//since this function is called by lvalue i in main, and i is index in main so, decreasing
 							//lineNumber by 1 gives i its original index.
 	}
 
 	catch(int errorName){
-		switch(errorName){
-		case error_data:
-		cout << "No such data in line: " << lineNumber << endl;
-		break;
-		case error_register:
-		cout << "No such register in line: " << lineNumber << endl;
-		break;
-		case error_H:
-		cout << "Data must end with 'H' in line: " << lineNumber << endl;
-		break;
-		case error_instructionSize:
-		cout << "Missing full instruction in line: " << lineNumber << endl;
-		break;
-		case error_flag:
-		cout << "No such flag in line: " << lineNumber << endl;
-		break;
-		case error_registerPair:
-		cout << "No such register pair in line: " << lineNumber << endl;
-		break;
-		case error_memoryExceed:
-		cout << "Memory exceed from instruction in line: " << lineNumber << endl;
-		break;
-		case error_label:
-		cout << "No such label in line: "<< lineNumber << endl;
-		return (lineNumber - 1);
-		default:
-		cout << "Error in line: " << lineNumber << endl;
-		}
-		return (lineNumber - 1);
+		cout << errors_container[errorName] << lineNumber << endl;
+		cout<< "!!!!!!!!!!!!!!!!!!!!!!!exiting due to error!!!!!!!!!!!!!!!!!!!!!!!!!\n";
+		return -10;
 	}
 }
 
